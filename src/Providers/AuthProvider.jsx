@@ -17,7 +17,7 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // sign in with email and pass
+  // sign in with email and password
   const SignInEmail = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
