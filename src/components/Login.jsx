@@ -1,19 +1,29 @@
+import { FaGoogle } from "react-icons/fa";
 import { MdOutlineMail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
+import { useAuth } from "../Hooks/CustomHooks";
 
 export default function Login() {
+  const { SingInGmail } = useAuth();
   // handle login
   const handleLogin = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const formObject = Object.fromEntries(formData.entries());
-    console.log(formObject);
+    const name = e.target.email.value.trim();
+    const password = e.target.password.value.trim();
+  };
+
+  // handle gmail login
+  const handleGmail = (e) => {
+    e.preventDefault();
+    SingInGmail()
+      .then((res) => console.log(res.user))
+      .catch((err) => console.log(err));
   };
   return (
     <div>
       <p>Login</p>
-      <div>
-        <form className="mx-auto max-w-md" onSubmit={handleLogin}>
+      <div className="mx-auto max-w-md">
+        <form className="mx-auto" onSubmit={handleLogin}>
           <label
             htmlFor="email-address-icon"
             className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
@@ -43,7 +53,7 @@ export default function Login() {
               type="password"
               name="password"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="name@flowbite.com"
+              placeholder="********"
               required
             />
           </div>
@@ -55,6 +65,14 @@ export default function Login() {
             Submit
           </button>
         </form>
+
+        <button
+          className="mx-auto flex items-center rounded-full border px-5 py-2"
+          onClick={handleGmail}
+        >
+          <FaGoogle />
+          <p>Login with google</p>
+        </button>
       </div>
     </div>
   );
