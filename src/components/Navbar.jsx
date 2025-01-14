@@ -1,5 +1,5 @@
 import { Avatar, Dropdown } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../Hooks/CustomHooks";
 
 export default function Navbar() {
@@ -31,12 +31,12 @@ export default function Navbar() {
       </li>
       {user && (
         <li>
-          <a
-            href="#"
+          <NavLink
+            to={"/dashboard"}
             className="block rounded px-3 py-2 text-gray-900 hover:bg-gray-100 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:p-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-blue-500"
           >
             Dashboard
-          </a>
+          </NavLink>
         </li>
       )}
     </>
