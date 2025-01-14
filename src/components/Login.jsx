@@ -2,21 +2,43 @@ import { FaGoogle } from "react-icons/fa";
 import { MdOutlineMail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { useAuth } from "../Hooks/CustomHooks";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
 
 export default function Login() {
-  const { SingInGmail } = useAuth();
+  const { SingInGmail, SignInEmail } = useAuth();
+  const axiosPublic = useAxiosPublic();
   // handle login
   const handleLogin = (e) => {
     e.preventDefault();
-    const name = e.target.email.value.trim();
-    const password = e.target.password.value.trim();
+    const formData = new FormData(e.target);
+    const formObject = Object.fromEntries(formData.entries());
+    SignInEmail(formObject.email, formObject.password)
+      .then((userCredential) => {
+        // Signed in
+        console.log(userCredential.user);
+        // ...
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   // handle gmail login
   const handleGmail = (e) => {
     e.preventDefault();
     SingInGmail()
-      .then((res) => console.log(res.user))
+      .then((res) => {
+        const resUser = res.user;
+        const payload = {
+          name: resUser.displayName,
+          email: resUser.email,
+          role: "Employee",
+        };
+        axiosPublic
+          .put("adduser", payload)
+          .then((res) => console.log(res.data))
+          .catch((err) => console.log(err));
+      })
       .catch((err) => console.log(err));
   };
   return (

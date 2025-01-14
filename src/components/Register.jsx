@@ -1,13 +1,46 @@
+import axios from "axios";
 import { MdOutlineMail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
+import { useAuth } from "../Hooks/CustomHooks";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
 
 export default function Register() {
-  const handleSignUp = (e) => {
+  const { SignUpEmail } = useAuth();
+  const axiosPublic = useAxiosPublic();
+  const handleSignUp = async (e) => {
     e.preventDefault();
+
     const formData = new FormData(e.target);
     const formObject = Object.fromEntries(formData.entries());
-    console.log(formObject);
+    axios
+      .post(
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_img_bb_key}`,
+        { image: formObject.image },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      )
+      .then((res) => {
+        formObject.image = res.data.data.display_url;
+
+        SignUpEmail(formObject.email, formObject.password)
+          .then((userCredential) => {
+            console.log(userCredential.user);
+            delete formObject.password;
+            axiosPublic
+              .put("adduser", formObject)
+              .then((res) => console.log(res.data))
+              .catch((err) => console.log(err));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((err) => console.log(err));
   };
+
   return (
     <div>
       <p>Login</p>
@@ -131,6 +164,7 @@ export default function Register() {
             <input
               type="file"
               name="image"
+              accept="image/*"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               placeholder="name@flowbite.com"
               required
