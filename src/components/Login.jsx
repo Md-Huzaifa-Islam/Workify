@@ -33,6 +33,7 @@ export default function Login() {
           name: resUser.displayName,
           email: resUser.email,
           role: "Employee",
+          verified: false,
         };
         axiosPublic
           .put("adduser", payload)

@@ -24,19 +24,19 @@ export default function Register() {
       )
       .then((res) => {
         formObject.image = res.data.data.display_url;
-
-        SignUpEmail(formObject.email, formObject.password)
-          .then((userCredential) => {
-            console.log(userCredential.user);
-            delete formObject.password;
-            axiosPublic
-              .put("adduser", formObject)
-              .then((res) => console.log(res.data))
-              .catch((err) => console.log(err));
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        (formObject.verified = false),
+          SignUpEmail(formObject.email, formObject.password)
+            .then((userCredential) => {
+              console.log(userCredential.user);
+              delete formObject.password;
+              axiosPublic
+                .put("adduser", formObject)
+                .then((res) => console.log(res.data))
+                .catch((err) => console.log(err));
+            })
+            .catch((error) => {
+              console.log(error);
+            });
       })
       .catch((err) => console.log(err));
   };

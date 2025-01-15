@@ -1,22 +1,26 @@
-import { useEffect, useState } from "react";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { useAuth } from "../Hooks/CustomHooks";
 import { format } from "date-fns";
 import CrudModal from "./EditToggle";
+import { useQuery } from "@tanstack/react-query";
 
 export default function WorkSheetTable() {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
-  const [data, setData] = useState();
-  useEffect(() => {
-    axiosSecure
-      .get(`owntask?email=${user.email}`)
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
-  }, [axiosSecure, user]);
+  const fetchTasks = async () => {
+    const { data } = await axiosSecure.get(`owntask?email=${user.email}`);
+    console.log(data);
+    return data;
+  };
+
+  // const { data, isLoading, error } = useQuery(["tasks"], fetchTasks);
+
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return <p>Error: {error.message}</p>;
+
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
+      {/* <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
         <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
@@ -56,17 +60,22 @@ export default function WorkSheetTable() {
                   <CrudModal data={d} />
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <a
-                    href="#"
-                    className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+                  <button
+                    onClick={() => {
+                      axiosSecure
+                        .delete(`owntask/${d._id}`)
+                        .then((res) => console.log(res.data))
+                        .catch((err) => console.log(err));
+                    }}
+                    className="font-medium text-blue-600"
                   >
                     Delete
-                  </a>
+                  </button>
                 </td>
               </tr>
             ))}
         </tbody>
-      </table>
+      </table> */}
     </div>
   );
 }

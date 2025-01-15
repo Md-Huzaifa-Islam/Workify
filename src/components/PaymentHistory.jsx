@@ -1,3 +1,9 @@
+import PaymentTable from "./PaymentTable";
+
 export default function PaymentHistory() {
-  return <div>PaymentHistory</div>;
+  return (
+    <div>
+      <PaymentTable />
+    </div>
+  );
 }

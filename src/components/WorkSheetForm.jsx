@@ -32,7 +32,7 @@ export default function WorkSheetForm() {
     const timestampInMilliseconds = dateObject.getTime();
     formObject.date = timestampInMilliseconds;
     formObject.email = user.email;
-    formObject.created = new Date();
+    formObject.created = new Date().getTime();
 
     // post the new task
     axiosSecure
