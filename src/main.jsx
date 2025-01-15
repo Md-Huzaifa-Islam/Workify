@@ -4,7 +4,7 @@ import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes";
 import AuthProvider from "./Providers/AuthProvider";
-
+import "flowbite";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
