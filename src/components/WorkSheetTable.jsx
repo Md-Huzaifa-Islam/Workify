@@ -1,26 +1,47 @@
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { useAuth } from "../Hooks/CustomHooks";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Spinner } from "flowbite-react";
 import { format } from "date-fns";
 import CrudModal from "./EditToggle";
-import { useQuery } from "@tanstack/react-query";
 
 export default function WorkSheetTable() {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  // Fetch tasks function
   const fetchTasks = async () => {
     const { data } = await axiosSecure.get(`owntask?email=${user.email}`);
-    console.log(data);
     return data;
   };
 
-  // const { data, isLoading, error } = useQuery(["tasks"], fetchTasks);
+  // Delete task function
+  const deleteTask = async (id) => {
+    const { data } = await axiosSecure.delete(`owntask/${id}`);
+    return data;
+  };
 
-  // if (isLoading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error.message}</p>;
+  // Mutation for deleting tasks
+  const mutation = useMutation({
+    mutationFn: deleteTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] }); // Invalidate tasks query to refetch data
+    },
+  });
+
+  // Query for fetching tasks
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: fetchTasks,
+  });
+
+  if (isLoading) return <Spinner />; // Show spinner while loading
+  if (error) return <p>Error: {error.message}</p>; // Handle errors
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      {/* <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
+      <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
         <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
@@ -30,14 +51,13 @@ export default function WorkSheetTable() {
               Hour Worked
             </th>
             <th scope="col" className="px-6 py-3">
-              Added date
-            </th>
-
-            <th scope="col" className="px-6 py-3">
-              <span className="sr-only">Edit</span>
+              Date Worked
             </th>
             <th scope="col" className="px-6 py-3">
-              <span className="sr-only">Delete</span>
+              <p className="sr-only"> Edit</p>
+            </th>
+            <th scope="col" className="px-6 py-3">
+              <p className="sr-only"> Delete</p>
             </th>
           </tr>
         </thead>
@@ -56,18 +76,14 @@ export default function WorkSheetTable() {
                 </th>
                 <td className="px-6 py-4">{d.hour} hr</td>
                 <td className="px-6 py-4">{format(d.date, "dd/MM/yyyy")}</td>
-                <td className="px-6 py-4 text-right">
+                <td className="px-6 py-4">
                   <CrudModal data={d} />
                 </td>
-                <td className="px-6 py-4 text-right">
+                <td className="px-6 py-4">
                   <button
                     onClick={() => {
-                      axiosSecure
-                        .delete(`owntask/${d._id}`)
-                        .then((res) => console.log(res.data))
-                        .catch((err) => console.log(err));
+                      mutation.mutate(d._id);
                     }}
-                    className="font-medium text-blue-600"
                   >
                     Delete
                   </button>
@@ -75,7 +91,7 @@ export default function WorkSheetTable() {
               </tr>
             ))}
         </tbody>
-      </table> */}
+      </table>
     </div>
   );
 }

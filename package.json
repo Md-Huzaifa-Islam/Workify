@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mantine/core": "^7.16.0",
+    "@mantine/hooks": "^7.16.0",
     "@tanstack/react-query": "^5.64.1",
     "@tanstack/react-table": "^8.20.6",
     "axios": "^1.7.9",

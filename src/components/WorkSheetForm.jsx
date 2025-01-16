@@ -3,18 +3,17 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { useAuth } from "../Hooks/CustomHooks";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function WorkSheetForm() {
+  const queryClient = useQueryClient();
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [startDate, setStartDate] = useState(new Date());
   const [task, setTask] = useState("");
-
   const [isCustom, setIsCustom] = useState(false);
-
   const handleTaskChange = (e) => {
     const selectedValue = e.target.value;
-
     if (selectedValue === "custom") {
       setIsCustom(true);
       setTask("");
@@ -23,6 +22,19 @@ export default function WorkSheetForm() {
       setTask(selectedValue);
     }
   };
+
+  const addtask = async (obj) => {
+    const { data } = await axiosSecure.post("addtask", obj);
+    return data;
+  };
+
+  const mutation = useMutation({
+    mutationFn: addtask,
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,10 +47,7 @@ export default function WorkSheetForm() {
     formObject.created = new Date().getTime();
 
     // post the new task
-    axiosSecure
-      .post("addtask", formObject)
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+    mutation.mutate(formObject);
 
     // Clear form
     setTask("");
