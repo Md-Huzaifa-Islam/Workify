@@ -56,12 +56,15 @@ export default function WorkSheetForm() {
   };
   return (
     <div>
-      <form className="mx-auto max-w-sm" onSubmit={handleSubmit}>
+      <form
+        className="mx-auto flex max-w-sm items-center justify-center gap-5"
+        onSubmit={handleSubmit}
+      >
         <select
           value={task}
           name="task"
           onChange={handleTaskChange}
-          className="rounded border px-2 py-1"
+          className=""
           required={!isCustom} // Only required if not using the custom input
         >
           <option value="" disabled>
@@ -74,15 +77,13 @@ export default function WorkSheetForm() {
           <option value="custom">Custom Task</option>
         </select>
 
-        <div className="mb-5">
-          <input
-            type="number"
-            name="hour"
-            placeholder="Hour"
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            required
-          />
-        </div>
+        <input
+          type="number"
+          name="hour"
+          placeholder="Hour"
+          className=""
+          required
+        />
         <DatePicker
           showIcon
           name="date"
@@ -92,7 +93,7 @@ export default function WorkSheetForm() {
 
         <button
           type="submit"
-          className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
+          className="h-full rounded-lg bg-blue-800 px-5 py-2 text-white"
         >
           Submit
         </button>

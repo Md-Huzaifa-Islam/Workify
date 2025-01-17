@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import DatePicker from "react-datepicker";
 import { useAuth } from "../Hooks/CustomHooks";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 const CrudModal = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { task, hour, _id, date } = data;
@@ -10,12 +11,10 @@ const CrudModal = ({ data }) => {
   const axiosSecure = useAxiosSecure();
   const [startDate, setStartDate] = useState(date);
   const [task2, setTask2] = useState(task);
-
   const [isCustom, setIsCustom] = useState(false);
-
+  const queryClient = useQueryClient();
   const handleTaskChange = (e) => {
     const selectedValue = e.target.value;
-
     if (selectedValue === "custom") {
       setIsCustom(true);
       setTask2("");
@@ -28,6 +27,19 @@ const CrudModal = ({ data }) => {
     setIsModalOpen(!isModalOpen);
   };
 
+  const editTask = async (formObject) => {
+    const { data } = await axiosSecure.put(`owntask/${_id}`, formObject);
+    return data;
+  };
+
+  const mutation = useMutation({
+    mutationFn: editTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["tasks"]);
+      toggleModal();
+    },
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -39,13 +51,7 @@ const CrudModal = ({ data }) => {
     formObject.created = new Date().getTime();
 
     // put the new task
-    axiosSecure
-      .put(`owntask/${_id}`, formObject)
-      .then((res) => {
-        console.log(res.data);
-        toggleModal();
-      })
-      .catch((err) => console.log(err));
+    mutation.mutate(formObject);
   };
 
   return (

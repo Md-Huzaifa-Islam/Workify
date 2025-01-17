@@ -34,6 +34,7 @@ export default function Login() {
           email: resUser.email,
           role: "Employee",
           verified: false,
+          created: new Date().getTime(),
         };
         axiosPublic
           .put("adduser", payload)

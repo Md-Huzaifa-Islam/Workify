@@ -12,6 +12,7 @@ export default function Register() {
 
     const formData = new FormData(e.target);
     const formObject = Object.fromEntries(formData.entries());
+    formObject.created = new Date().getTime();
     axios
       .post(
         `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_img_bb_key}`,
