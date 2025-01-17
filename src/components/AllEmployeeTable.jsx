@@ -80,22 +80,28 @@ export default function AllEmployeeTable() {
                 </th>
                 <td className="px-6 py-4">{d?.designation} hr</td>
                 <td>
-                  <button
-                    onClick={() => {
-                      mutation.mutate(d?._id);
-                    }}
-                  >
-                    {d?.role == "HR" && "Make"} HR
-                  </button>
+                  {d?.role == "Admin" ? (
+                    <button disabled>Admin</button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        mutation.mutate(d?._id);
+                      }}
+                    >
+                      {d?.role == "HR" && "Make"} HR
+                    </button>
+                  )}
                 </td>
                 <td>
-                  <button
-                    onClick={() => {
-                      mutation2.mutate(d?._id);
-                    }}
-                  >
-                    {d?.fired === "True" ? "Fired" : "Fire"}
-                  </button>
+                  {d?.role == "Admin" || (
+                    <button
+                      onClick={() => {
+                        mutation2.mutate(d?._id);
+                      }}
+                    >
+                      {d?.fired === "True" ? "Fired" : "Fire"}
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
