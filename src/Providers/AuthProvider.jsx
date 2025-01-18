@@ -16,6 +16,7 @@ const provider = new GoogleAuthProvider();
 
 export default function AuthProvider({ children }) {
   const axiosSecure = useAxiosSecure();
+  const [role, setRole] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -42,11 +43,17 @@ export default function AuthProvider({ children }) {
     const disconnect = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        console.log(currentUser);
-        axiosSecure.post("jwt", {
-          name: currentUser?.displayName,
-          email: currentUser?.email,
-        });
+        axiosSecure
+          .post("jwt", {
+            name: currentUser?.displayName,
+            email: currentUser?.email,
+          })
+          .then(() => {
+            axiosSecure
+              .get("getrole")
+              .then((res) => setRole(res.data))
+              .catch((err) => console.log(err));
+          });
       } else {
         axiosSecure.post("logout", {});
       }
@@ -62,6 +69,7 @@ export default function AuthProvider({ children }) {
     SingInGmail,
     SignUpEmail,
     signout,
+    role,
   };
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
