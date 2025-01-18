@@ -6,7 +6,9 @@ export default function Dashboard() {
       <Link to={"/dashboard/worksheet"}>Work sheet</Link>
       <Link to={"/dashboard/paymenthistory"}>Payment History</Link>
       <Link to={"/dashboard/employeelist"}>employeelist</Link>
+      <Link to={"/dashboard/progress"}>Progress</Link>
       <Link to={"/dashboard/allemployeelist"}>all employeelist</Link>
+      <Link to={"/dashboard/payrolls"}>all payrolls</Link>
     </div>
   );
 }

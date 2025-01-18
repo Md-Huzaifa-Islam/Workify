@@ -1,44 +1,39 @@
-import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
-import { useAuth } from "../Hooks/CustomHooks";
+import { Spinner } from "flowbite-react";
+import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
 
-export default function PaymentTable() {
-  const { user } = useAuth();
+export default function ProgressTable() {
   const axiosSecure = useAxiosSecure();
 
-  const getPayRolls = async () => {
-    const { data } = await axiosSecure.get(`payrolls?email=${user.email}`);
+  // Fetch tasks function
+  const fetchTasks = async () => {
+    const { data } = await axiosSecure.get(`owntask`);
     return data;
   };
 
-  const { isPending, isError, data, error } = useQuery({
-    queryKey: ["payrolls"],
-    queryFn: getPayRolls,
+  // Query for fetching tasks
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: fetchTasks,
   });
 
-  if (isPending) {
-    return <span>Loading...</span>;
-  }
+  if (isLoading) return <Spinner />; // Show spinner while loading
+  if (error) return <p>Error: {error.message}</p>; // Handle errors
 
-  if (isError) {
-    return <span>Error: {error.message}</span>;
-  }
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
         <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
-              Month
+              Task
             </th>
             <th scope="col" className="px-6 py-3">
-              Year
+              Hour Worked
             </th>
             <th scope="col" className="px-6 py-3">
-              Amount
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Transaction Id
+              Date Worked
             </th>
           </tr>
         </thead>
@@ -49,10 +44,14 @@ export default function PaymentTable() {
                 key={d?._id}
                 className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
               >
-                <td className="px-6 py-4">{d?.month} </td>
-                <td className="px-6 py-4">{d?.year} </td>
-                <td className="px-6 py-4">{d?.salary} $</td>
-                <td className="px-6 py-4">{d?.transactionid} </td>
+                <th
+                  scope="row"
+                  className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
+                >
+                  {d?.task}
+                </th>
+                <td className="px-6 py-4">{d?.hour} hr</td>
+                <td className="px-6 py-4">{format(d?.date, "dd/MM/yyyy")}</td>
               </tr>
             ))}
         </tbody>

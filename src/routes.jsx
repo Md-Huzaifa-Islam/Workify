@@ -11,6 +11,8 @@ import DashBoardContainer from "./Layout/DashBoardContainer";
 import PaymentHistory from "./components/PaymentHistory";
 import EmployeeList from "./components/EmployeeList";
 import AllEmployeeList from "./components/AllEmployeeList";
+import PayRolls from "./components/PayRolls";
+import Progress from "./components/Progress";
 // import PrivateRoute from "./components/Dashboard";
 
 export const router = createBrowserRouter([
@@ -58,6 +60,14 @@ export const router = createBrowserRouter([
           {
             path: "allemployeelist",
             element: <AllEmployeeList />,
+          },
+          {
+            path: "payrolls",
+            element: <PayRolls />,
+          },
+          {
+            path: "progress",
+            element: <Progress />,
           },
         ],
       },

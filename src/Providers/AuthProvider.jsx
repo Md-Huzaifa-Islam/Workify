@@ -10,10 +10,12 @@ import { auth } from "../Firebase/Firebase";
 import { AuthContext } from "../Contexts/Context";
 import PropTypes from "prop-types";
 import { GoogleAuthProvider } from "firebase/auth";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const provider = new GoogleAuthProvider();
 
 export default function AuthProvider({ children }) {
+  const axiosSecure = useAxiosSecure();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -39,10 +41,18 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const disconnect = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        axiosSecure.post("jwt", {
+          name: "huzaifa",
+          email: "huzaifa@gmail.com",
+        });
+      } else {
+        axiosSecure.post("logout", {});
+      }
       setLoading(false);
     });
     return () => disconnect();
-  }, []);
+  }, [axiosSecure]);
 
   const values = {
     user,

@@ -1,17 +1,14 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import DatePicker from "react-datepicker";
-import { useAuth } from "../Hooks/CustomHooks";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 const PayButton = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { task, _id, salary } = data;
-  const { user } = useAuth();
+  const { _id, salary, name, email } = data;
   const axiosSecure = useAxiosSecure();
-  const [task2, setTask2] = useState(task);
+  const [task2, setTask2] = useState("");
   const [isCustom, setIsCustom] = useState(false);
-  const queryClient = useQueryClient();
   const handlemMonthChange = (e) => {
     const selectedValue = e.target.value;
     if (selectedValue === "custom") {
@@ -34,7 +31,6 @@ const PayButton = ({ data }) => {
   const mutation = useMutation({
     mutationFn: editTask,
     onSuccess: () => {
-      queryClient.invalidateQueries(["users"]);
       toggleModal();
     },
   });
@@ -44,8 +40,10 @@ const PayButton = ({ data }) => {
     const formData = new FormData(e.target);
     const formObject = Object.fromEntries(formData.entries());
     formObject.employeeId = _id;
-    formObject.email = user.email;
+    formObject.name = name;
+    formObject.email = email;
     formObject.salary = salary;
+
     formObject.created = new Date().getTime();
     // post the new task
     mutation.mutate(formObject);
