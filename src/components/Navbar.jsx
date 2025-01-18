@@ -1,9 +1,11 @@
 import { Avatar, Dropdown } from "flowbite-react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../Hooks/CustomHooks";
 
 export default function Navbar() {
   const { user, signout } = useAuth();
+  const location = useLocation().pathname;
+  console.log(location);
   const handleLogout = () => {
     signout()
       .then(() => console.log("logged out"))
@@ -12,28 +14,28 @@ export default function Navbar() {
   const links = (
     <>
       <li>
-        <a
-          href="#"
-          className="block rounded bg-blue-700 px-3 py-2 text-white md:bg-transparent md:p-0 md:text-blue-700 md:dark:text-blue-500"
+        <NavLink
+          to={"/"}
+          className={`block rounded px-3 py-2 md:bg-transparent md:p-0 ${location == "/" && "text-blue-700"}`}
           aria-current="page"
         >
           Home
-        </a>
+        </NavLink>
       </li>
 
       <li>
-        <a
-          href="#"
-          className="block rounded px-3 py-2 text-gray-900 hover:bg-gray-100 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:p-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-blue-500"
+        <NavLink
+          to={"/contact"}
+          className={`block rounded px-3 py-2 md:bg-transparent md:p-0 ${location == "/contact" && "text-blue-700"}`}
         >
           Contact Us
-        </a>
+        </NavLink>
       </li>
       {user && (
         <li>
           <NavLink
             to={"/dashboard"}
-            className="block rounded px-3 py-2 text-gray-900 hover:bg-gray-100 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:p-0 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:bg-transparent md:dark:hover:text-blue-500"
+            className={`block rounded px-3 py-2 md:bg-transparent md:p-0 ${location == "/dashboard" && "text-blue-700"}`}
           >
             Dashboard
           </NavLink>
@@ -46,8 +48,8 @@ export default function Navbar() {
     <nav className="sticky top-0 z-20 w-full border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-900">
       <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
         {/* Logo */}
-        <a
-          href="https://flowbite.com/"
+        <Link
+          to={"/"}
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <img
@@ -58,7 +60,7 @@ export default function Navbar() {
           <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
             Flowbite
           </span>
-        </a>
+        </Link>
 
         {/* Right Section */}
         <div className="flex space-x-3 md:order-2 rtl:space-x-reverse">
@@ -67,13 +69,7 @@ export default function Navbar() {
             <Dropdown
               arrowIcon={false}
               inline
-              label={
-                <Avatar
-                  alt="User avatar"
-                  img="https://via.placeholder.com/150"
-                  rounded
-                />
-              }
+              label={<Avatar alt="User avatar" img={user?.photoURL} rounded />}
               className="" // Ensure alignment starts at the button's left
             >
               <Dropdown.Header>

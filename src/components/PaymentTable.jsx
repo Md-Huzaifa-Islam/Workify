@@ -7,7 +7,7 @@ export default function PaymentTable() {
   const axiosSecure = useAxiosSecure();
 
   const getPayRolls = async () => {
-    const { data } = await axiosSecure.get(`payrolls?email=${user.email}`);
+    const { data } = await axiosSecure.get(`ownpayment?email=${user.email}`);
     return data;
   };
 

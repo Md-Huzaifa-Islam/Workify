@@ -83,6 +83,7 @@ export default function PayRollsTable() {
 
                 <td className="px-6 py-4">
                   <button
+                    disabled={Boolean(d?.paymentDate)}
                     onClick={() => {
                       mutation.mutate(d?._id);
                     }}

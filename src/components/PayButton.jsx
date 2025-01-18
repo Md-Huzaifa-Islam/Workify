@@ -5,7 +5,7 @@ import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { useMutation } from "@tanstack/react-query";
 const PayButton = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { _id, salary, name, email } = data;
+  const { _id, salary, name, email, verified } = data;
   const axiosSecure = useAxiosSecure();
   const [task2, setTask2] = useState("");
   const [isCustom, setIsCustom] = useState(false);
@@ -58,6 +58,7 @@ const PayButton = ({ data }) => {
     <div>
       {/* Modal toggle button */}
       <button
+        disabled={!verified}
         onClick={toggleModal}
         className="block rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         type="button"

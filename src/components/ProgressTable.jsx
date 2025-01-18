@@ -8,7 +8,7 @@ export default function ProgressTable() {
 
   // Fetch tasks function
   const fetchTasks = async () => {
-    const { data } = await axiosSecure.get(`owntask`);
+    const { data } = await axiosSecure.get(`alltask`);
     return data;
   };
 

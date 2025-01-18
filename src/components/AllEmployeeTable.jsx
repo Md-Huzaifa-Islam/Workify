@@ -6,7 +6,7 @@ export default function AllEmployeeTable() {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const getUsers = async () => {
-    const { data } = await axiosSecure.get(`users?admin=true`);
+    const { data } = await axiosSecure.get(`allusers`);
     return data;
   };
 
@@ -67,44 +67,43 @@ export default function AllEmployeeTable() {
         </thead>
         <tbody>
           {data &&
-            data.map((d) => (
-              <tr
-                key={d?._id}
-                className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-              >
-                <th
-                  scope="row"
-                  className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                >
-                  {d?.name}
-                </th>
-                <td className="px-6 py-4">{d?.designation} hr</td>
-                <td>
-                  {d?.role == "Admin" ? (
-                    <button disabled>Admin</button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        mutation.mutate(d?._id);
-                      }}
+            data.map(
+              (d) =>
+                d?.role == "Admin" || (
+                  <tr
+                    key={d?._id}
+                    className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
+                  >
+                    <th
+                      scope="row"
+                      className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
                     >
-                      {d?.role == "HR" && "Make"} HR
-                    </button>
-                  )}
-                </td>
-                <td>
-                  {d?.role == "Admin" || (
-                    <button
-                      onClick={() => {
-                        mutation2.mutate(d?._id);
-                      }}
-                    >
-                      {d?.fired === "True" ? "Fired" : "Fire"}
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
+                      {d?.name}
+                    </th>
+                    <td className="px-6 py-4">{d?.designation} hr</td>
+                    <td>
+                      <button
+                        onClick={() => {
+                          mutation.mutate(d?._id);
+                        }}
+                      >
+                        {d?.role !== "HR" && "Make"} HR
+                      </button>
+                    </td>
+                    <td>
+                      {d?.role == "Admin" || (
+                        <button
+                          onClick={() => {
+                            mutation2.mutate(d?._id);
+                          }}
+                        >
+                          {d?.fired === true ? "Fired" : "Fire"}
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ),
+            )}
         </tbody>
       </table>
     </div>
