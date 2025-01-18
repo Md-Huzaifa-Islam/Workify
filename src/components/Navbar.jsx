@@ -5,7 +5,7 @@ import { useAuth } from "../Hooks/CustomHooks";
 export default function Navbar() {
   const { user, signout } = useAuth();
   const location = useLocation().pathname;
-  console.log(location);
+
   const handleLogout = () => {
     signout()
       .then(() => console.log("logged out"))
