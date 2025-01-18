@@ -51,13 +51,18 @@ export default function AuthProvider({ children }) {
           .then(() => {
             axiosSecure
               .get("getrole")
-              .then((res) => setRole(res.data))
+              .then((res) => {
+                setRole(res.data);
+
+                setLoading(false);
+              })
               .catch((err) => console.log(err));
           });
       } else {
-        axiosSecure.post("logout", {});
+        axiosSecure.post("logout", {}).then(() => setLoading(false));
       }
-      setLoading(false);
+
+      console.log(role);
     });
     return () => disconnect();
   }, [axiosSecure]);

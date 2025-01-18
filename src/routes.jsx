@@ -13,6 +13,9 @@ import EmployeeList from "./components/EmployeeList";
 import AllEmployeeList from "./components/AllEmployeeList";
 import PayRolls from "./components/PayRolls";
 import Progress from "./components/Progress";
+import AdminRoute from "./Providers/AdminRoute";
+import HrRoute from "./Providers/HrRoute";
+import EmployeeRoute from "./Providers/EmployeeRoute";
 // import PrivateRoute from "./components/Dashboard";
 
 export const router = createBrowserRouter([
@@ -47,27 +50,51 @@ export const router = createBrowserRouter([
           },
           {
             path: "worksheet",
-            element: <WorkSheet />,
+            element: (
+              <EmployeeRoute>
+                <WorkSheet />
+              </EmployeeRoute>
+            ),
           },
           {
             path: "paymenthistory",
-            element: <PaymentHistory />,
+            element: (
+              <EmployeeRoute>
+                <PaymentHistory />
+              </EmployeeRoute>
+            ),
           },
           {
             path: "employeelist",
-            element: <EmployeeList />,
-          },
-          {
-            path: "allemployeelist",
-            element: <AllEmployeeList />,
-          },
-          {
-            path: "payrolls",
-            element: <PayRolls />,
+            element: (
+              <HrRoute>
+                <EmployeeList />
+              </HrRoute>
+            ),
           },
           {
             path: "progress",
-            element: <Progress />,
+            element: (
+              <HrRoute>
+                <Progress />
+              </HrRoute>
+            ),
+          },
+          {
+            path: "allemployeelist",
+            element: (
+              <AdminRoute>
+                <AllEmployeeList />
+              </AdminRoute>
+            ),
+          },
+          {
+            path: "payrolls",
+            element: (
+              <AdminRoute>
+                <PayRolls />
+              </AdminRoute>
+            ),
           },
         ],
       },
