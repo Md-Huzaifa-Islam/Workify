@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import PayButton from "./PayButton";
+import { Link } from "react-router-dom";
 
 export default function EmployeeTable() {
   const axiosSecure = useAxiosSecure();
@@ -86,7 +87,9 @@ export default function EmployeeTable() {
                 <td className="px-6 py-4">
                   <PayButton data={d} />
                 </td>
-                <td className="px-6 py-4">details </td>
+                <td className="px-6 py-4">
+                  <Link to={`/dashboard/details/${d?._id}`}>Details</Link>
+                </td>
               </tr>
             ))}
         </tbody>
