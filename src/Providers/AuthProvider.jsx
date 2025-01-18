@@ -42,9 +42,10 @@ export default function AuthProvider({ children }) {
     const disconnect = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
+        console.log(currentUser);
         axiosSecure.post("jwt", {
-          name: "huzaifa",
-          email: "huzaifa@gmail.com",
+          name: currentUser?.displayName,
+          email: currentUser?.email,
         });
       } else {
         axiosSecure.post("logout", {});
