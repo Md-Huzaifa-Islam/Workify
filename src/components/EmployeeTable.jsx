@@ -88,7 +88,7 @@ export default function EmployeeTable() {
                   <PayButton data={d} />
                 </td>
                 <td className="px-6 py-4">
-                  <Link to={`/dashboard/details/${d?._id}`}>Details</Link>
+                  <Link to={`/dashboard/details/${d?.email}`}>Details</Link>
                 </td>
               </tr>
             ))}

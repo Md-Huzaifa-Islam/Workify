@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import {
   BarChart,
   Bar,
@@ -8,15 +9,28 @@ import {
   ResponsiveContainer,
   LabelList,
 } from "recharts";
-
-const data = [
-  { month: "OCT '23", salary: 110, color: "#28a745" },
-  { month: "NOV '23", salary: 100, color: "#ff5722" },
-  { month: "DEC '23", salary: 105, color: "#fdd835" },
-  { month: "JAN '24", salary: 150, color: "#03a9f4" },
-];
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 const DetailsChart = () => {
+  const { id } = useParams();
+  const axiosSecure = useAxiosSecure();
+  const getPayments = async () => {
+    const { data } = await axiosSecure.get(`details?email=${id}`);
+    return data;
+  };
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ["userdata", id],
+    queryFn: getPayments,
+  });
+  if (isPending) {
+    return <span>Loading...</span>;
+  }
+
+  if (isError) {
+    return <span>Error: {error.message}</span>;
+  }
+  console.log(data);
   return (
     <div className="mx-auto max-w-4xl">
       <ResponsiveContainer width="100%" height={400}>
@@ -31,7 +45,6 @@ const DetailsChart = () => {
           />
           <Tooltip />
           <Bar dataKey="salary" fill="#8884d8">
-            {/* Dynamically assign color to each bar */}
             <LabelList dataKey="salary" position="top" />
             {data.map((entry, index) => (
               <Bar key={index} dataKey="salary" fill={entry.color} />

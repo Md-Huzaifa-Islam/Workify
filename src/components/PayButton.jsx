@@ -3,22 +3,14 @@ import PropTypes from "prop-types";
 import DatePicker from "react-datepicker";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { useMutation } from "@tanstack/react-query";
+import { format } from "date-fns";
 const PayButton = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { _id, salary, name, email, verified } = data;
   const axiosSecure = useAxiosSecure();
-  const [task2, setTask2] = useState("");
-  const [isCustom, setIsCustom] = useState(false);
-  const handlemMonthChange = (e) => {
-    const selectedValue = e.target.value;
-    if (selectedValue === "custom") {
-      setIsCustom(true);
-      setTask2("");
-    } else {
-      setIsCustom(false);
-      setTask2(selectedValue);
-    }
-  };
+  const [month, setMonth] = useState(new Date());
+  const [year, setYear] = useState(new Date());
+
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
@@ -31,6 +23,8 @@ const PayButton = ({ data }) => {
   const mutation = useMutation({
     mutationFn: editTask,
     onSuccess: () => {
+      setMonth(new Date());
+      setYear(new Date());
       toggleModal();
     },
   });
@@ -43,8 +37,16 @@ const PayButton = ({ data }) => {
     formObject.name = name;
     formObject.email = email;
     formObject.salary = salary;
-
     formObject.created = new Date().getTime();
+    const monthName = format(month, "MMMM");
+    const year2 = format(year, "yyyy");
+    const monthIndex = new Date(`${monthName} 1, ${year2}`).getMonth();
+    const date = new Date(year2, monthIndex);
+    const milliseconds = date.getTime();
+    formObject.month = monthName;
+    formObject.year = year2;
+    formObject.payDate = milliseconds;
+
     // post the new task
     mutation.mutate(formObject);
   };
@@ -107,32 +109,19 @@ const PayButton = ({ data }) => {
             <form className="mx-auto max-w-sm" onSubmit={handleSubmit}>
               <p>Amount : {salary} $ </p>
 
-              <select
-                value={task2}
-                name="month"
-                onChange={handlemMonthChange}
-                className="rounded border px-2 py-1"
-                required={!isCustom} // Only required if not using the custom input
-              >
-                <option value="" disabled>
-                  Select Month
-                </option>
-                <option value="January">January</option>
-                <option value="February">February</option>
-                <option value="March">March</option>
-                <option value="April">April</option>
-                <option value="May">May</option>
-                <option value="June">June</option>
-                <option value="July">July</option>
-                <option value="August">August</option>
-                <option value="September">September</option>
-                <option value="October">October</option>
-                <option value="November">November</option>
-                <option value="December">December</option>
-              </select>
               <DatePicker
-                name="year"
-                selected={new Date()}
+                // For extracting the value
+                selected={month} // No state needed
+                // Handles month selection
+                onChange={(d) => setMonth(d)}
+                dateFormat="MMMM" // Displays only month name
+                showMonthYearPicker // Enables month-only view
+                showYearDropdown={false} // Hides year dropdown
+                showYearPicker={false}
+              />
+              <DatePicker
+                selected={year}
+                onChange={(d) => setYear(d)}
                 renderYearContent={renderYearContent}
                 showYearPicker
                 dateFormat="yyyy"

@@ -1,0 +1,58 @@
+[
+  {
+    "email": "huzaifaislamrakib@gmail.com",
+    "created": 1737228049214,
+    "name": "Md Huzaifa Islam",
+    "role": "Admin",
+    "verified": false,
+    "fired": "False"
+  },
+  {
+    "email": "vufygywif@mailinator.com",
+    "bank": "66",
+    "created": 1737127593107,
+    "designation": "Error unde repellend",
+    "image": "https://i.ibb.co.com/GcyHB2g/final.png",
+    "name": "Hall Anthony",
+    "role": "Employee",
+    "salary": "38",
+    "verified": false,
+    "fired": false
+  },
+  {
+    "email": "cyfiwusuc@mailinator.com",
+    "bank": "24",
+    "created": 1737127599627,
+    "designation": "Lorem dolor esse vo",
+    "image": "https://i.ibb.co.com/GcyHB2g/final.png",
+    "name": "Shea Moody",
+    "role": "Employee",
+    "salary": "58",
+    "verified": false,
+    "fired": false
+  },
+  {
+    "email": "burowimeb@mailinator.com",
+    "bank": "70",
+    "created": 1737127602529,
+    "designation": "Dolor in veniam par",
+    "image": "https://i.ibb.co.com/GcyHB2g/final.png",
+    "name": "Flavia Calderon",
+    "role": "HR",
+    "salary": "48",
+    "verified": true,
+    "fired": false
+  },
+  {
+    "email": "valytinyc@mailinator.com",
+    "bank": "44",
+    "created": 1737127605089,
+    "designation": "Magni earum at ex qu",
+    "image": "https://i.ibb.co.com/GcyHB2g/final.png",
+    "name": "Colorado Caldwell",
+    "role": "HR",
+    "salary": "75",
+    "verified": false,
+    "fired": true
+  }
+]
