@@ -5,7 +5,7 @@ import { useAuth } from "../Hooks/CustomHooks";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 
 export default function Register() {
-  const { SignUpEmail } = useAuth();
+  const { SignUpEmail, update, setUser } = useAuth();
   const axiosPublic = useAxiosPublic();
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -27,13 +27,15 @@ export default function Register() {
         formObject.image = res.data.data.display_url;
         (formObject.verified = false),
           SignUpEmail(formObject.email, formObject.password)
-            .then((userCredential) => {
-              console.log(userCredential.user);
-              delete formObject.password;
-              axiosPublic
-                .put("adduser", formObject)
-                .then((res) => console.log(res.data))
-                .catch((err) => console.log(err));
+            .then((userCredentials) => {
+              update(formObject.name, formObject.image).then(() => {
+                setUser({ ...userCredentials.user });
+                delete formObject.password;
+                axiosPublic
+                  .put("adduser", formObject)
+                  .then((res) => console.log(res.data))
+                  .catch((err) => console.log(err));
+              });
             })
             .catch((error) => {
               console.log(error);

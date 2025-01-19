@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { auth } from "../Firebase/Firebase";
@@ -34,6 +35,14 @@ export default function AuthProvider({ children }) {
     return signInWithPopup(auth, provider);
   };
 
+  // update name and image
+  const update = (name, photo) => {
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: photo,
+    });
+  };
+
   // sign out
   const signout = () => {
     return signOut(auth);
@@ -62,8 +71,6 @@ export default function AuthProvider({ children }) {
       } else {
         axiosSecure.post("logout", {}).then(() => setLoading(false));
       }
-
-      console.log(role);
     });
     return () => disconnect();
   }, [axiosSecure]);
@@ -75,6 +82,8 @@ export default function AuthProvider({ children }) {
     SingInGmail,
     SignUpEmail,
     signout,
+    update,
+    setUser,
     role,
   };
 
