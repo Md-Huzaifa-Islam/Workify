@@ -45,8 +45,8 @@ export default function Navbar() {
   );
 
   return (
-    <nav className="sticky top-0 z-20 w-full border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-900">
-      <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
+    <nav className="z-20 w-full border-b border-gray-200 bg-white px-5 dark:border-gray-600 dark:bg-gray-900">
+      <div className="mx-auto flex flex-wrap items-center justify-between py-4 md:container md:mx-auto">
         {/* Logo */}
         <Link
           to={"/"}

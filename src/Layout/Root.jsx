@@ -4,9 +4,9 @@ import Footer from "../components/Footer";
 
 export default function Root() {
   return (
-    <div className="flex min-h-screen flex-col justify-between">
+    <div className="relative flex min-h-screen flex-col justify-between pt-20">
       <div>
-        <nav>
+        <nav className="fixed top-0 z-[200] w-full">
           <Navbar />
         </nav>
 
