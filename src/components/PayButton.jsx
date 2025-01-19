@@ -40,6 +40,8 @@ const PayButton = ({ data }) => {
     formObject.created = new Date().getTime();
     const monthName = format(month, "MMMM");
     const year2 = format(year, "yyyy");
+    formObject.chartDate =
+      monthName.slice(0, 3).toUpperCase() + " '" + year2.slice(-2);
     const monthIndex = new Date(`${monthName} 1, ${year2}`).getMonth();
     const date = new Date(year2, monthIndex);
     const milliseconds = date.getTime();

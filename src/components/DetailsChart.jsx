@@ -39,7 +39,7 @@ const DetailsChart = () => {
           margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" />
+          <XAxis dataKey={`chartDate`} />
           <YAxis
             label={{ value: "Salary ($)", angle: -90, position: "insideLeft" }}
           />
