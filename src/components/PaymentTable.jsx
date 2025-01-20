@@ -1,8 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+} from "@tanstack/react-table";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import Loading from "./Loading";
+import React from "react";
 import { useAuth } from "../Hooks/CustomHooks";
 
-export default function PaymentTable() {
+const PaymentTable = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
@@ -11,52 +18,80 @@ export default function PaymentTable() {
     return data;
   };
 
-  const { isPending, isError, data, error } = useQuery({
+  const { isLoading, isError, data } = useQuery({
     queryKey: ["payrolls"],
     queryFn: getPayRolls,
   });
+  //   only task related to table
 
-  if (isPending) {
-    return <span>Loading...</span>;
-  }
+  // Define columns using JSX
+  const columns = React.useMemo(
+    () => [
+      {
+        accessorKey: "month",
+        header: "Month",
+      },
+      {
+        accessorKey: "year",
+        header: "Year",
+      },
+      {
+        accessorKey: "salary",
+        header: "Amount",
+      },
+      {
+        accessorKey: "transactionid",
+        header: "Transaction Id",
+      },
+    ],
+    [],
+  );
 
-  if (isError) {
-    return <span>Error: {error.message}</span>;
-  }
+  const table = useReactTable({
+    data: data || [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  if (isLoading) return <Loading />;
+  if (isError) return <p>Error loading data!</p>;
+
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Month
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Year
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Amount
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Transaction Id
-            </th>
-          </tr>
+    <div className="w-full p-4">
+      <table className="min-w-full border-collapse border border-gray-300">
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  key={header.id}
+                  className="border border-gray-300 bg-gray-200 px-4 py-2"
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
         </thead>
         <tbody>
-          {data &&
-            data.map((d) => (
-              <tr
-                key={d?._id}
-                className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-              >
-                <td className="px-6 py-4">{d?.month} </td>
-                <td className="px-6 py-4">{d?.year} </td>
-                <td className="px-6 py-4">{d?.salary} $</td>
-                <td className="px-6 py-4">{d?.transactionid} </td>
-              </tr>
-            ))}
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="border border-gray-300 px-4 py-2">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
   );
-}
+};
+
+export default PaymentTable;

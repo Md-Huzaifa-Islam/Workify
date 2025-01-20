@@ -1,8 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+} from "@tanstack/react-table";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import Loading from "./Loading";
+import React from "react";
 import { format } from "date-fns";
 
-export default function PayRollsTable() {
+const PayRollsTable = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
@@ -22,79 +29,136 @@ export default function PayRollsTable() {
     },
   });
 
-  const { isPending, isError, data, error } = useQuery({
+  const { isLoading, isError, data } = useQuery({
     queryKey: ["payrolls"],
     queryFn: getPayRolls,
   });
 
-  if (isPending) {
-    return <span>Loading...</span>;
-  }
+  //   only task related to table
 
-  if (isError) {
-    return <span>Error: {error.message}</span>;
-  }
+  // Define columns using JSX
+  const columns = React.useMemo(
+    () => [
+      {
+        accessorKey: "name",
+        header: "Name",
+      },
+      {
+        accessorKey: "salary",
+        header: "Salary",
+      },
+      {
+        accessorKey: "month",
+        header: "Month",
+      },
+      {
+        accessorKey: "year",
+        header: "Year",
+      },
+      {
+        id: "paymentDate",
+        header: "Payment Date",
+        cell: ({ row }) => (
+          <p>
+            {row?.original?.paymentDate
+              ? `${format(row?.original?.paymentDate, "dd/MM/yyyy")}`
+              : ""}
+          </p>
+        ),
+      },
+      {
+        id: "pay2",
+        header: "Pay",
+        cell: ({ row }) => (
+          <button
+            disabled={Boolean(row?.original?.paymentDate)}
+            onClick={() => {
+              mutation.mutate(row?.original?._id);
+            }}
+          >
+            Pay
+          </button>
+        ),
+      },
+
+      //   {
+      //     id: "verifyButton",
+      //     header: "Verify",
+      //     cell: ({ row }) => (
+      //       <button
+      //         className="rounded bg-blue-500 px-3 py-1 text-white"
+      //         onClick={() => handleVerify(row.original._id)}
+      //       >
+      //         {row.original?.verified ? "✅" : "❌"}
+      //       </button>
+      //     ),
+      //   },
+      //   {
+      //     id: "payButton",
+      //     header: "Pay",
+      //     cell: ({ row }) => <PayButton data={row.original} />,
+      //   },
+      //   {
+      //     id: "profileLink",
+      //     header: "Profile",
+      //     cell: ({ row }) => (
+      //       <Link
+      //         to={`/dashboard/details/${row.original?.email}`}
+      //         className="text-blue-600 underline"
+      //       >
+      //         Details
+      //       </Link>
+      //     ),
+      //   },
+    ],
+    [],
+  );
+
+  const table = useReactTable({
+    data: data || [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  if (isLoading) return <Loading />;
+  if (isError) return <p>Error loading data!</p>;
+
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Salary
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Month
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Year
-            </th>
-            <th scope="col" className="px-6 py-3">
-              payment date
-            </th>
-            <th scope="col" className="px-6 py-3">
-              <span className="sr-only">Pay</span>
-            </th>
-          </tr>
+    <div className="w-full p-4">
+      <table className="min-w-full border-collapse border border-gray-300">
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  key={header.id}
+                  className="border border-gray-300 bg-gray-200 px-4 py-2"
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
         </thead>
         <tbody>
-          {data &&
-            data.map((d) => (
-              <tr
-                key={d?._id}
-                className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-              >
-                <th
-                  scope="row"
-                  className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                >
-                  {d?.name}
-                </th>
-                <td className="px-6 py-4">{d?.salary} $</td>
-                <td className="px-6 py-4">{d?.month} </td>
-                <td className="px-6 py-4">{d?.year} </td>
-                <td className="px-6 py-4">
-                  {d?.paymentDate
-                    ? `${format(d?.paymentDate, "dd/MM/yyyy")}`
-                    : ""}
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="border border-gray-300 px-4 py-2">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
-
-                <td className="px-6 py-4">
-                  <button
-                    disabled={Boolean(d?.paymentDate)}
-                    onClick={() => {
-                      mutation.mutate(d?._id);
-                    }}
-                  >
-                    Pay
-                  </button>
-                </td>
-              </tr>
-            ))}
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
   );
-}
+};
+
+export default PayRollsTable;

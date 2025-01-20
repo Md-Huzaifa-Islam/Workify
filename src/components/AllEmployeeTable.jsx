@@ -1,8 +1,14 @@
-import useAxiosSecure from "../Hooks/useAxiosSecure";
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+} from "@tanstack/react-table";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import Loading from "./Loading";
+import React from "react";
 
-export default function AllEmployeeTable() {
+const DemoEmployeeTable = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const getUsers = async () => {
@@ -32,80 +38,99 @@ export default function AllEmployeeTable() {
       queryClient.invalidateQueries(["allusers"]);
     },
   });
-  const { isPending, isError, data, error } = useQuery({
+  const { isLoading, isError, data } = useQuery({
     queryKey: ["allusers"],
     queryFn: getUsers,
   });
 
-  if (isPending) {
-    return <span>Loading...</span>;
-  }
+  //   only task related to table
 
-  if (isError) {
-    return <span>Error: {error.message}</span>;
-  }
+  // Define columns using JSX
+  const columns = React.useMemo(
+    () => [
+      {
+        accessorKey: "name",
+        header: "Name",
+      },
+      {
+        accessorKey: "designation",
+        header: "Designation",
+      },
+      {
+        id: "role2",
+        header: "Role",
+        cell: ({ row }) => (
+          <button
+            onClick={() => {
+              mutation.mutate(row.original?._id);
+            }}
+          >
+            {row.original?.role !== "HR" && "Make"} HR
+          </button>
+        ),
+      },
+      {
+        id: "role",
+        header: "Role",
+        cell: ({ row }) => (
+          <button
+            onClick={() => {
+              mutation2.mutate(row.original?._id);
+            }}
+          >
+            {row.original?.fired === true ? "Fired" : "Fire"}
+          </button>
+        ),
+      },
+    ],
+    [],
+  );
+
+  const table = useReactTable({
+    data: data || [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  if (isLoading) return <Loading />;
+  if (isError) return <p>Error loading data!</p>;
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Designation
-            </th>
-
-            <th scope="col" className="px-6 py-3">
-              <span className="sr-only">Make HR</span>
-            </th>
-            <th scope="col" className="px-6 py-3">
-              <span className="sr-only">Fire</span>
-            </th>
-          </tr>
+    <div className="w-full p-4">
+      <table className="min-w-full border-collapse border border-gray-300">
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  key={header.id}
+                  className="border border-gray-300 bg-gray-200 px-4 py-2"
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
         </thead>
         <tbody>
-          {data &&
-            data.map(
-              (d) =>
-                d?.role == "Admin" || (
-                  <tr
-                    key={d?._id}
-                    className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-                  >
-                    <th
-                      scope="row"
-                      className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                    >
-                      {d?.name}
-                    </th>
-                    <td className="px-6 py-4">{d?.designation} hr</td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          mutation.mutate(d?._id);
-                        }}
-                      >
-                        {d?.role !== "HR" && "Make"} HR
-                      </button>
-                    </td>
-                    <td>
-                      {d?.role == "Admin" || (
-                        <button
-                          onClick={() => {
-                            mutation2.mutate(d?._id);
-                          }}
-                        >
-                          {d?.fired === true ? "Fired" : "Fire"}
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ),
-            )}
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="border border-gray-300 px-4 py-2">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
   );
-}
+};
+
+export default DemoEmployeeTable;

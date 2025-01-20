@@ -6,8 +6,6 @@ import Register from "./components/Register";
 import PrivateRoute from "./Providers/PrivateRoute";
 import WorkSheet from "./components/WorkSheet";
 import DashBoardContainer from "./Layout/DashBoardContainer";
-import PaymentHistory from "./components/PaymentHistory";
-import EmployeeList from "./components/EmployeeList";
 import AllEmployeeList from "./components/AllEmployeeList";
 import PayRolls from "./components/PayRolls";
 import Progress from "./components/Progress";
@@ -67,7 +65,7 @@ export const router = createBrowserRouter([
             path: "paymenthistory",
             element: (
               <EmployeeRoute>
-                <PaymentHistory />
+                <DemoEmployeeTable />
               </EmployeeRoute>
             ),
           },

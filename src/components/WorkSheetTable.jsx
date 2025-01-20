@@ -1,11 +1,17 @@
-import useAxiosSecure from "../Hooks/useAxiosSecure";
-import { useAuth } from "../Hooks/CustomHooks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Spinner } from "flowbite-react";
-import { format } from "date-fns";
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+} from "@tanstack/react-table";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import Loading from "./Loading";
+import React from "react";
 import CrudModal from "./EditToggle";
+import { useAuth } from "../Hooks/CustomHooks";
+import { format } from "date-fns";
 
-export default function WorkSheetTable() {
+const WorkSheetTable = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -31,67 +37,96 @@ export default function WorkSheetTable() {
   });
 
   // Query for fetching tasks
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["tasks"],
     queryFn: fetchTasks,
   });
+  //   only task related to table
 
-  if (isLoading) return <Spinner />; // Show spinner while loading
-  if (error) return <p>Error: {error.message}</p>; // Handle errors
+  // Define columns using JSX
+  const columns = React.useMemo(
+    () => [
+      {
+        accessorKey: "task",
+        header: "Task",
+      },
+      {
+        accessorKey: "hour",
+        header: "Hour Worked",
+      },
+      {
+        id: "DateWorked",
+        header: "Date Worked",
+        cell: ({ row }) => <p>{format(row?.original?.date, "dd/MM/yyyy")}</p>,
+      },
+
+      {
+        id: "pay3",
+        header: "Pay",
+        cell: ({ row }) => <CrudModal data={row?.original} />,
+      },
+      {
+        id: "delete",
+        header: "Delete",
+        cell: ({ row }) => (
+          <button
+            onClick={() => {
+              mutation.mutate(row?.original?._id);
+            }}
+          >
+            Delete
+          </button>
+        ),
+      },
+    ],
+    [],
+  );
+
+  const table = useReactTable({
+    data: data || [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  if (isLoading) return <Loading />;
+  if (isError) return <p>Error loading data!</p>;
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Task
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Hour Worked
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Date Worked
-            </th>
-            <th scope="col" className="px-6 py-3">
-              <p className="sr-only"> Edit</p>
-            </th>
-            <th scope="col" className="px-6 py-3">
-              <p className="sr-only"> Delete</p>
-            </th>
-          </tr>
+    <div className="w-full p-4">
+      <table className="min-w-full border-collapse border border-gray-300">
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  key={header.id}
+                  className="border border-gray-300 bg-gray-200 px-4 py-2"
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
         </thead>
         <tbody>
-          {data &&
-            data.map((d) => (
-              <tr
-                key={d?._id}
-                className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-              >
-                <th
-                  scope="row"
-                  className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                >
-                  {d?.task}
-                </th>
-                <td className="px-6 py-4">{d?.hour} hr</td>
-                <td className="px-6 py-4">{format(d?.date, "dd/MM/yyyy")}</td>
-                <td className="px-6 py-4">
-                  <CrudModal data={d} />
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="border border-gray-300 px-4 py-2">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
-                <td className="px-6 py-4">
-                  <button
-                    onClick={() => {
-                      mutation.mutate(d?._id);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
   );
-}
+};
+
+export default WorkSheetTable;

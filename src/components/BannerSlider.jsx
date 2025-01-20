@@ -1,5 +1,5 @@
-import slider1 from "../../public/image/slider1.jpg";
-import slider2 from "../../public/image/slider2.jpg";
+import slider1 from "/image/slider1.jpg";
+import slider2 from "/image/slider2.jpg";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
