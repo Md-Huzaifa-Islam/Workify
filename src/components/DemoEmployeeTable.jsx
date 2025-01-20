@@ -9,7 +9,7 @@ import Loading from "./Loading";
 import { format } from "date-fns";
 import React from "react";
 
-const ProgressTable = () => {
+const DemoEmployeeTable = () => {
   const axiosSecure = useAxiosSecure();
 
   // Fetch tasks function
@@ -42,6 +42,35 @@ const ProgressTable = () => {
         header: "Date Worked",
         cell: ({ row }) => <p>{format(row.original?.date, "dd/MM/yyyy")}</p>,
       },
+      //   {
+      //     id: "verifyButton",
+      //     header: "Verify",
+      //     cell: ({ row }) => (
+      //       <button
+      //         className="rounded bg-blue-500 px-3 py-1 text-white"
+      //         onClick={() => handleVerify(row.original._id)}
+      //       >
+      //         {row.original?.verified ? "✅" : "❌"}
+      //       </button>
+      //     ),
+      //   },
+      //   {
+      //     id: "payButton",
+      //     header: "Pay",
+      //     cell: ({ row }) => <PayButton data={row.original} />,
+      //   },
+      //   {
+      //     id: "profileLink",
+      //     header: "Profile",
+      //     cell: ({ row }) => (
+      //       <Link
+      //         to={`/dashboard/details/${row.original?.email}`}
+      //         className="text-blue-600 underline"
+      //       >
+      //         Details
+      //       </Link>
+      //     ),
+      //   },
     ],
     [],
   );
@@ -93,4 +122,4 @@ const ProgressTable = () => {
   );
 };
 
-export default ProgressTable;
+export default DemoEmployeeTable;

@@ -5,7 +5,6 @@ import { useAuth } from "../Hooks/CustomHooks";
 export default function Navbar() {
   const { user, signout } = useAuth();
   const location = useLocation().pathname;
-
   const handleLogout = () => {
     signout()
       .then(() => console.log("logged out"))
@@ -35,7 +34,7 @@ export default function Navbar() {
         <li>
           <NavLink
             to={"/dashboard"}
-            className={`block rounded px-3 py-2 md:bg-transparent md:p-0 ${location == "/dashboard" && "text-blue-700"}`}
+            className={`block rounded px-3 py-2 md:bg-transparent md:p-0 ${location.slice(0, 10) == "/dashboard" && "text-blue-700"}`}
           >
             Dashboard
           </NavLink>

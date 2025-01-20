@@ -1,99 +1,135 @@
+import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+} from "@tanstack/react-table";
+import { Link } from "react-router-dom";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import PayButton from "./PayButton";
-import { Link } from "react-router-dom";
+import Loading from "./Loading";
 
-export default function EmployeeTable() {
+const EmployeeTable = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
-
-  const getUsers = async () => {
-    const { data } = await axiosSecure.get(`users`);
-    return data;
-  };
   const changeVerify = async (id) => {
     const { data } = await axiosSecure.patch(`updateverified/${id}`);
     return data;
   };
-
   const mutation = useMutation({
     mutationFn: changeVerify,
     onSuccess: () => {
       queryClient.invalidateQueries(["users"]);
     },
   });
-
-  const { isPending, isError, data, error } = useQuery({
+  // Button handlers
+  const handleVerify = (id) => {
+    mutation.mutate(id);
+  };
+  const getUsers = async () => {
+    const { data } = await axiosSecure.get(`users`);
+    return data;
+  };
+  // Fetch data using React Query
+  const { isLoading, isError, data } = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
   });
 
-  if (isPending) {
-    return <span>Loading...</span>;
-  }
+  // Define columns using JSX
+  const columns = React.useMemo(
+    () => [
+      {
+        accessorKey: "name",
+        header: "Name",
+      },
+      {
+        accessorKey: "email",
+        header: "Email",
+      },
+      {
+        accessorKey: "bank",
+        header: "Bank Account",
+      },
+      {
+        id: "verifyButton",
+        header: "Verify",
+        cell: ({ row }) => (
+          <button
+            className="rounded bg-blue-500 px-3 py-1 text-white"
+            onClick={() => handleVerify(row.original._id)}
+          >
+            {row.original?.verified ? "✅" : "❌"}
+          </button>
+        ),
+      },
+      {
+        id: "payButton",
+        header: "Pay",
+        cell: ({ row }) => <PayButton data={row.original} />,
+      },
+      {
+        id: "profileLink",
+        header: "Profile",
+        cell: ({ row }) => (
+          <Link
+            to={`/dashboard/details/${row.original?.email}`}
+            className="text-blue-600 underline"
+          >
+            Details
+          </Link>
+        ),
+      },
+    ],
+    [],
+  );
 
-  if (isError) {
-    return <span>Error: {error.message}</span>;
-  }
+  const table = useReactTable({
+    data: data || [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  if (isLoading) return <Loading />;
+  if (isError) return <p>Error loading data!</p>;
+
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Email
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Verified
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Bank Account
-            </th>
-            <th scope="col" className="px-6 py-3">
-              <span className="sr-only">Pay</span>
-            </th>
-            <th scope="col" className="px-6 py-3">
-              <span className="sr-only">Details</span>
-            </th>
-          </tr>
+    <div className="w-full p-4">
+      <table className="min-w-full border-collapse border border-gray-300">
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  key={header.id}
+                  className="border border-gray-300 bg-gray-200 px-4 py-2"
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
         </thead>
         <tbody>
-          {data &&
-            data.map((d) => (
-              <tr
-                key={d?._id}
-                className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
-              >
-                <th
-                  scope="row"
-                  className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
-                >
-                  {d?.name}
-                </th>
-                <td className="px-6 py-4">{d?.email} </td>
-                <td className="px-6 py-4">
-                  <button
-                    onClick={() => {
-                      mutation.mutate(d?._id);
-                    }}
-                  >
-                    {d?.verified ? "✅" : "❌"}
-                  </button>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="border border-gray-300 px-4 py-2">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
-                <td className="px-6 py-4">{d?.bank} </td>
-                <td className="px-6 py-4">
-                  <PayButton data={d} />
-                </td>
-                <td className="px-6 py-4">
-                  <Link to={`/dashboard/details/${d?.email}`}>Details</Link>
-                </td>
-              </tr>
-            ))}
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
   );
-}
+};
+
+export default EmployeeTable;

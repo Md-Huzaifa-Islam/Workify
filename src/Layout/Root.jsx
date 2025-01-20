@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 export default function Root() {
   return (
     <div className="relative flex min-h-screen flex-col justify-between pt-20">
-      <div>
+      <div className="flex-grow">
         <nav className="fixed top-0 z-[200] w-full">
           <Navbar />
         </nav>
