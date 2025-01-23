@@ -1,34 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
 import {
-  useReactTable,
-  getCoreRowModel,
   flexRender,
+  getCoreRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
-import Loading from "./Loading";
 import { format } from "date-fns";
 import React from "react";
+import PropTypes from "prop-types";
 
-const ProgressTable = () => {
-  const axiosSecure = useAxiosSecure();
-
-  // Fetch tasks function
-  const fetchTasks = async () => {
-    const { data } = await axiosSecure.get(`alltask`);
-    return data;
-  };
-
-  // Query for fetching tasks
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: fetchTasks,
-  });
-
+const ProgressTable = ({ data }) => {
   //   only task related to table
 
   // Define columns using JSX
   const columns = React.useMemo(
     () => [
+      {
+        accessorKey: "name",
+        header: "Name",
+      },
       {
         accessorKey: "task",
         header: "Task",
@@ -51,9 +39,6 @@ const ProgressTable = () => {
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-
-  if (isLoading) return <Loading />;
-  if (isError) return <p>Error loading data!</p>;
 
   return (
     <div className="w-full p-4">
@@ -91,6 +76,9 @@ const ProgressTable = () => {
       </table>
     </div>
   );
+};
+ProgressTable.propTypes = {
+  data: PropTypes.array.isRequired,
 };
 
 export default ProgressTable;

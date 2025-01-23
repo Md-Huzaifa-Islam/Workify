@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { useAuth } from "../Hooks/CustomHooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
 
 export default function WorkSheetForm() {
   const queryClient = useQueryClient();
@@ -43,7 +44,9 @@ export default function WorkSheetForm() {
     const dateObject = new Date(formObject.date);
     const timestampInMilliseconds = dateObject.getTime();
     formObject.date = timestampInMilliseconds;
+    formObject.month = format(new Date(timestampInMilliseconds), "MMMM");
     formObject.email = user.email;
+    formObject.name = user.displayName;
     formObject.created = new Date().getTime();
 
     // post the new task
