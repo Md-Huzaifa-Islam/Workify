@@ -3,45 +3,64 @@ import { MdOutlineMail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { useAuth } from "../Hooks/CustomHooks";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
+import { useState } from "react";
 
 export default function Register() {
   const { SignUpEmail, update, setUser } = useAuth();
   const axiosPublic = useAxiosPublic();
+  const [error, setError] = useState("");
   const handleSignUp = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
     const formObject = Object.fromEntries(formData.entries());
     formObject.created = new Date().getTime();
-    axios
-      .post(
-        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_img_bb_key}`,
-        { image: formObject.image },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
+    console.log(formObject);
+    // Check if the password is at least 6 characters long
+    if (formObject.password.length < 6) {
+      setError("Password must be at least 6 characters.");
+    }
+
+    // Check if the password contains at least one capital letter
+    else if (!/[A-Z]/.test(formObject.password)) {
+      setError("Password must contain at least one capital letter.");
+    }
+
+    // Check if the password contains at least one special character
+    else if (!/[!@#$%^&*(),.?":{}|<>]/.test(formObject.password)) {
+      setError("Password must contain at least one special character.");
+    } else {
+      setError("");
+      axios
+        .post(
+          `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_img_bb_key}`,
+          { image: formObject.image },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           },
-        },
-      )
-      .then((res) => {
-        formObject.image = res.data.data.display_url;
-        (formObject.verified = false),
-          SignUpEmail(formObject.email, formObject.password)
-            .then((userCredentials) => {
-              update(formObject.name, formObject.image).then(() => {
-                setUser({ ...userCredentials.user });
-                delete formObject.password;
-                axiosPublic
-                  .put("adduser", formObject)
-                  .then((res) => console.log(res.data))
-                  .catch((err) => console.log(err));
+        )
+        .then((res) => {
+          formObject.image = res.data.data.display_url;
+          (formObject.verified = false),
+            SignUpEmail(formObject.email, formObject.password)
+              .then((userCredentials) => {
+                update(formObject.name, formObject.image).then(() => {
+                  setUser({ ...userCredentials.user });
+                  delete formObject.password;
+                  axiosPublic
+                    .put("adduser", formObject)
+                    .then((res) => console.log(res.data))
+                    .catch((err) => console.log(err));
+                });
+              })
+              .catch((error) => {
+                console.log(error);
               });
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-      })
-      .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   return (
@@ -83,21 +102,26 @@ export default function Register() {
             />
           </div>
 
-          <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-            Password
-          </label>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
-              <RiLockPasswordFill />
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+              Password
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
+                <RiLockPasswordFill />
+              </div>
+              <input
+                type="text"
+                onChange={() => setError("")}
+                name="password"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="name@flowbite.com"
+                required
+              />
             </div>
-            <input
-              type="password"
-              name="password"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="name@flowbite.com"
-              required
-            />
+            <p className="text-sm text-red-500"> {error}</p>
           </div>
+
           <label
             htmlFor="countries"
             className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
