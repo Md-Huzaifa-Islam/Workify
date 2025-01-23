@@ -15,8 +15,8 @@ import EmployeeRoute from "./Providers/EmployeeRoute";
 import Details from "./components/Details";
 import Contact from "./components/Contact";
 import Profile from "./components/Profile";
-import DemoEmployeeTable from "./components/DemoEmployeeTable";
 import EmployeeTable from "./components/EmployeeTable";
+import PaymentHistory from "./components/PaymentHistory";
 // import PrivateRoute from "./components/Dashboard";
 
 export const router = createBrowserRouter([
@@ -65,7 +65,7 @@ export const router = createBrowserRouter([
             path: "paymenthistory",
             element: (
               <EmployeeRoute>
-                <DemoEmployeeTable />
+                <PaymentHistory />
               </EmployeeRoute>
             ),
           },

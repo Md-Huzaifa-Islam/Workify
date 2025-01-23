@@ -40,7 +40,7 @@ const PaymentTable = () => {
         header: "Amount",
       },
       {
-        accessorKey: "transactionid",
+        accessorKey: "transactionId",
         header: "Transaction Id",
       },
     ],

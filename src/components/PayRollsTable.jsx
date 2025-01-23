@@ -1,33 +1,24 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
-  useReactTable,
-  getCoreRowModel,
   flexRender,
+  getCoreRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
-import Loading from "./Loading";
-import React from "react";
 import { format } from "date-fns";
+import React from "react";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import AdminPaymentModal from "./AdminPaymentModal";
+import Loading from "./Loading";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 const PayRollsTable = () => {
+  const stripePromise = loadStripe(import.meta.env.VITE_stripe);
   const axiosSecure = useAxiosSecure();
-  const queryClient = useQueryClient();
-
   const getPayRolls = async () => {
     const { data } = await axiosSecure.get(`payrolls`);
     return data;
   };
-  const HandlePay = async (id) => {
-    const { data } = await axiosSecure.patch(`payrolls/${id}`);
-    return data;
-  };
-
-  const mutation = useMutation({
-    mutationFn: HandlePay,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["payrolls"]);
-    },
-  });
 
   const { isLoading, isError, data } = useQuery({
     queryKey: ["payrolls"],
@@ -70,48 +61,13 @@ const PayRollsTable = () => {
         id: "pay2",
         header: "Pay",
         cell: ({ row }) => (
-          <button
-            disabled={Boolean(row?.original?.paymentDate)}
-            onClick={() => {
-              mutation.mutate(row?.original?._id);
-            }}
-          >
-            Pay
-          </button>
+          <Elements stripe={stripePromise}>
+            <AdminPaymentModal data={row?.original} />
+          </Elements>
         ),
       },
-
-      //   {
-      //     id: "verifyButton",
-      //     header: "Verify",
-      //     cell: ({ row }) => (
-      //       <button
-      //         className="rounded bg-blue-500 px-3 py-1 text-white"
-      //         onClick={() => handleVerify(row.original._id)}
-      //       >
-      //         {row.original?.verified ? "✅" : "❌"}
-      //       </button>
-      //     ),
-      //   },
-      //   {
-      //     id: "payButton",
-      //     header: "Pay",
-      //     cell: ({ row }) => <PayButton data={row.original} />,
-      //   },
-      //   {
-      //     id: "profileLink",
-      //     header: "Profile",
-      //     cell: ({ row }) => (
-      //       <Link
-      //         to={`/dashboard/details/${row.original?.email}`}
-      //         className="text-blue-600 underline"
-      //       >
-      //         Details
-      //       </Link>
-      //     ),
-      //   },
     ],
-    [],
+    [stripePromise],
   );
 
   const table = useReactTable({
