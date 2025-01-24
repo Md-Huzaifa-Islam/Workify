@@ -21,7 +21,9 @@ export default function ProgressOptions({
           Select a name
         </option>
         {uniqueNames.map((n, index) => (
-          <option key={index}>{n}</option>
+          <option key={index} value={n}>
+            {n}
+          </option>
         ))}
       </select>
       <select

@@ -1,18 +1,15 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
-import ProgressTable from "./ProgressTable";
 import Loading from "./Loading";
-import { useEffect, useState } from "react";
 import ProgressOptions from "./ProgressOptions";
+import ProgressTable from "./ProgressTable";
 
 export default function Progress() {
-  const queryClient = useQueryClient();
   const axiosSecure = useAxiosSecure();
   const [month, setMonth] = useState("");
   const [name, setName] = useState("");
-  useEffect(() => {
-    queryClient.invalidateQueries(["tasks"]);
-  }, [name, month, queryClient]);
+
   // Fetch tasks function
   const fetchTasks = async () => {
     const { data } = await axiosSecure.get(
@@ -41,7 +38,7 @@ export default function Progress() {
         />
       </div>
 
-      {data && <ProgressTable data={data} />}
+      {data && <ProgressTable data2={data} month={month} name={name} />}
     </div>
   );
 }

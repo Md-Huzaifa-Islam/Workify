@@ -15,7 +15,7 @@ export default function Register() {
     const formData = new FormData(e.target);
     const formObject = Object.fromEntries(formData.entries());
     formObject.created = new Date().getTime();
-    console.log(formObject);
+
     // Check if the password is at least 6 characters long
     if (formObject.password.length < 6) {
       setError("Password must be at least 6 characters.");
