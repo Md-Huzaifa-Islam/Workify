@@ -17,6 +17,8 @@ import Contact from "./components/Contact";
 import Profile from "./components/Profile";
 import EmployeeTable from "./components/EmployeeTable";
 import PaymentHistory from "./components/PaymentHistory";
+import DbCheckRoute from "./Providers/DbCheckRoute";
+import UpdateInfo from "./components/UpdateInfo";
 // import PrivateRoute from "./components/Dashboard";
 
 export const router = createBrowserRouter([
@@ -26,26 +28,48 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: (
+          <DbCheckRoute>
+            <Home />
+          </DbCheckRoute>
+        ),
+      },
+      {
+        path: "/notcompleted",
+        element: <UpdateInfo />,
       },
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <DbCheckRoute>
+            <Login />
+          </DbCheckRoute>
+        ),
       },
       {
         path: "/register",
-        element: <Register />,
+        element: (
+          <DbCheckRoute>
+            <Register />
+          </DbCheckRoute>
+        ),
       },
       {
         path: "/contact",
-        element: <Contact />,
+        element: (
+          <DbCheckRoute>
+            <Contact />
+          </DbCheckRoute>
+        ),
       },
       {
         path: "/dashboard",
         element: (
-          <PrivateRoute>
-            <DashBoardContainer />
-          </PrivateRoute>
+          <DbCheckRoute>
+            <PrivateRoute>
+              <DashBoardContainer />
+            </PrivateRoute>
+          </DbCheckRoute>
         ),
 
         children: [

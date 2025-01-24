@@ -51,7 +51,7 @@ const Profile = () => {
 
         <div>
           <h3 className="text-sm font-semibold">Join Date</h3>
-          <p>{format(data?.created, "dd/MM/yyy")}</p>
+          <p>{format(data?.created, "dd/MM/yyyy")}</p>
         </div>
 
         <div>

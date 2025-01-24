@@ -28,7 +28,7 @@ const ProgressTable = ({ data2, month, name }) => {
       const temp = data2;
       setData([...temp]);
     }
-  }, [name, month, data, data2]);
+  }, [name, month]);
   // Define columns using JSX
   const columns = React.useMemo(
     () => [

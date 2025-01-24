@@ -4,11 +4,11 @@ import "swiper/css";
 import "swiper/css/effect-cube";
 import "swiper/css/pagination";
 import { Autoplay, EffectCube, Pagination } from "swiper/modules";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
 import Loading from "./Loading";
 import { useQuery } from "@tanstack/react-query";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
 export default function Testimonials() {
-  const axiosSecure = useAxiosSecure();
+  const axiosSecure = useAxiosPublic();
   const getReviews = async () => {
     const { data } = await axiosSecure.get("reviews");
     return data;
