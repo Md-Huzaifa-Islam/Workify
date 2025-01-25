@@ -42,7 +42,7 @@ export default function Testimonials() {
         }}
         grabCursor={true}
         modules={[Autoplay, EffectFlip]}
-        className="mySwiper w-96"
+        className="mySwiper w-96 sm:w-80 md:w-96"
       >
         {data &&
           data.map((review) => (

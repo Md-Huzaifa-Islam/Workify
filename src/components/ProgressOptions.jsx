@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { RiResetLeftLine } from "react-icons/ri";
 
 export default function ProgressOptions({
   setName,
@@ -73,12 +74,13 @@ export default function ProgressOptions({
         </option>
       </select>
       <button
+        className="btn btn-primary flex items-center justify-center gap-1"
         onClick={() => {
           setMonth("");
           setName("");
         }}
       >
-        Reset
+        <p>Reset</p> <RiResetLeftLine />
       </button>
     </div>
   );

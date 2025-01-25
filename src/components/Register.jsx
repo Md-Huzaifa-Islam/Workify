@@ -1,9 +1,11 @@
 import axios from "axios";
+import { useState } from "react";
+import { BsCashCoin } from "react-icons/bs";
+import { IoIosPerson } from "react-icons/io";
 import { MdOutlineMail } from "react-icons/md";
-import { RiLockPasswordFill } from "react-icons/ri";
+import { RiBankCard2Fill, RiLockPasswordFill } from "react-icons/ri";
 import { useAuth } from "../Hooks/CustomHooks";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
-import { useState } from "react";
 
 export default function Register() {
   const { SignUpEmail, update, setUser } = useAuth();
@@ -64,42 +66,49 @@ export default function Register() {
   };
 
   return (
-    <div>
-      <p>Login</p>
-      <div>
-        <form className="mx-auto max-w-md" onSubmit={handleSignUp}>
-          <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-            Name
-          </label>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
-              <RiLockPasswordFill />
+    <div className="mt-10">
+      <div className="px-5 md:container md:mx-auto">
+        <p className="pb-8 text-center text-5xl font-bold">Register</p>
+        <form
+          className="mx-auto grid max-w-3xl gap-x-10 gap-y-5 sm:grid-cols-2"
+          onSubmit={handleSignUp}
+        >
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+              Name
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
+                <IoIosPerson />
+              </div>
+              <input
+                type="text"
+                name="name"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="Your name"
+                required
+              />
             </div>
-            <input
-              type="text"
-              name="name"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="name@flowbite.com"
-              required
-            />
           </div>
-          <label
-            htmlFor="email-address-icon"
-            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Your Email
-          </label>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
-              <MdOutlineMail />
+          <div>
+            <label
+              htmlFor="email-address-icon"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Your Email
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
+                <MdOutlineMail />
+              </div>
+              <input
+                type="email"
+                name="email"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="name@flowbite.com"
+                required
+              />
             </div>
-            <input
-              type="email"
-              name="email"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="name@flowbite.com"
-              required
-            />
           </div>
 
           <div>
@@ -111,98 +120,98 @@ export default function Register() {
                 <RiLockPasswordFill />
               </div>
               <input
-                type="text"
+                type="password"
                 onChange={() => setError("")}
                 name="password"
                 className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                placeholder="name@flowbite.com"
+                placeholder="*************"
                 required
               />
             </div>
             <p className="text-sm text-red-500"> {error}</p>
           </div>
 
-          <label
-            htmlFor="countries"
-            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Select your role
-          </label>
-          <select
-            id="countries"
-            name="role"
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-          >
-            <option>Employee</option>
-            <option>HR</option>
-          </select>
-          <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-            Bank Account Number
-          </label>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
-              <RiLockPasswordFill />
-            </div>
-            <input
-              type="number"
-              name="bank"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="name@flowbite.com"
-              required
-            />
+          <div>
+            <label
+              htmlFor="countries"
+              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Select your role
+            </label>
+            <select
+              id="countries"
+              name="role"
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            >
+              <option>Employee</option>
+              <option>HR</option>
+            </select>
           </div>
-          <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-            Salary
-          </label>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
-              <RiLockPasswordFill />
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+              Bank Account Number
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
+                <RiBankCard2Fill />
+              </div>
+              <input
+                type="number"
+                name="bank"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="4242 4242 4242 42"
+                required
+              />
             </div>
-            <input
-              type="number"
-              name="salary"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="name@flowbite.com"
-              required
-            />
           </div>
-          <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-            Designation
-          </label>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
-              <RiLockPasswordFill />
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+              Salary
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
+                <BsCashCoin />
+              </div>
+              <input
+                type="number"
+                name="salary"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="$$"
+                required
+              />
             </div>
-            <input
-              type="text"
-              name="designation"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="name@flowbite.com"
-              required
-            />
           </div>
-          <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-            Photo
-          </label>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
-              <RiLockPasswordFill />
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+              Designation
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5">
+                <IoIosPerson />
+              </div>
+              <input
+                type="text"
+                name="designation"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="Ex-Project manager"
+                required
+              />
             </div>
-            <input
-              type="file"
-              name="image"
-              accept="image/*"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="name@flowbite.com"
-              required
-            />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+              Photo
+            </label>
+            <div className="relative">
+              <input type="file" name="image" accept="image/*" required />
+            </div>
           </div>
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
+            className="btn btn-primary btn-block mx-auto mt-4 flex items-center rounded-full border px-5 py-2 text-xl text-white sm:col-span-2"
           >
-            Submit
+            Register
           </button>
         </form>
       </div>

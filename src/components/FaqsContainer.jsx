@@ -18,12 +18,12 @@ export default function FaqsContainer() {
     },
   ];
   return (
-    <div>
+    <div className="px-5 md:container md:mx-auto">
       <SectionHeader
         heading="Frequently Asked Questions "
         subHeading="Explore commonly asked questions or share your own. We're here to provide clarity and help with anything you need."
       />
-      <div className="grid grid-cols-2 items-start gap-5">
+      <div className="grid items-start gap-14 sm:grid-cols-2 sm:gap-7 md:gap-14">
         <FaqsCard faqs={faqs} />
         <AddFaqSection />
       </div>

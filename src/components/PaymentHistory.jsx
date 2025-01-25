@@ -2,7 +2,7 @@ import PaymentTable from "./PaymentTable";
 
 export default function PaymentHistory() {
   return (
-    <div>
+    <div className="mt-5">
       <PaymentTable />
     </div>
   );

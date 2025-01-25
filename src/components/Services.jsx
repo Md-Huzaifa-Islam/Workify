@@ -8,7 +8,7 @@ const Services = () => {
     <section className="">
       <div className="container mx-auto px-6 text-center">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-lg border p-6">
+          <div className="rounded-lg border p-6 sm:p-2 sm:py-4 md:p-3 md:py-3 lg:p-6">
             <div className="mb-4">
               <TaskAnimation />
             </div>
@@ -17,7 +17,7 @@ const Services = () => {
               Track and update your daily tasks and hours worked effortlessly.
             </p>
           </div>
-          <div className="rounded-lg border p-6">
+          <div className="rounded-lg border p-6 sm:p-2 sm:py-4 md:p-3 md:py-3 lg:p-6">
             <div className="mb-4">
               <ManagementAnimation />
             </div>
@@ -27,7 +27,7 @@ const Services = () => {
               payroll.
             </p>
           </div>
-          <div className="rounded-lg border p-6">
+          <div className="rounded-lg border p-6 sm:p-2 sm:py-4 md:p-3 md:py-3 lg:p-6">
             <div className="mb-4">
               <PaymentAnimation />
             </div>
@@ -36,7 +36,7 @@ const Services = () => {
               Admin reviews and approves payment requests for employees.
             </p>
           </div>
-          <div className="rounded-lg border p-6">
+          <div className="rounded-lg border p-6 sm:p-2 sm:py-4 md:p-3 md:py-3 lg:p-6">
             <div className="mb-4">
               <ContactAnimation />
             </div>

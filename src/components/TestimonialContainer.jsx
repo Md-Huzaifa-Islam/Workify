@@ -10,7 +10,7 @@ export default function TestimonialContainer() {
         heading="What Our Users Are Saying"
         subHeading="Read inspiring stories from our valued users and share your own experience with us. Your feedback helps us grow and serve you better"
       />
-      <div className="flex items-center justify-center gap-10">
+      <div className="flex flex-col items-center justify-center gap-10 sm:flex-row sm:gap-6 md:gap-10">
         <Testimonials />
         <AddTestimonial />
       </div>

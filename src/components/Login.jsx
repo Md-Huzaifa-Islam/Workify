@@ -3,6 +3,7 @@ import { MdOutlineMail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { useAuth } from "../Hooks/CustomHooks";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
+import LoginAnimation from "./LoginAnimation";
 
 export default function Login() {
   const { SingInGmail, SignInEmail } = useAuth();
@@ -44,9 +45,11 @@ export default function Login() {
       .catch((err) => console.log(err));
   };
   return (
-    <div>
-      <p>Login</p>
-      <div className="mx-auto max-w-md">
+    <div className="grid items-center justify-items-center px-5 md:container sm:grid-cols-2 md:mx-auto">
+      <div className="hidden w-full max-w-xl sm:block">
+        <LoginAnimation />
+      </div>
+      <div className="mx-auto max-w-md rounded-lg border-2 p-10 md:min-w-[350px] md:p-8 lg:min-w-[400px] lg:p-10">
         <form className="mx-auto" onSubmit={handleLogin}>
           <label
             htmlFor="email-address-icon"
@@ -84,18 +87,18 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
+            className="btn btn-primary btn-block mx-auto mt-4 flex items-center rounded-full border px-5 py-2 text-xl text-white"
           >
-            Submit
+            Login
           </button>
         </form>
-
+        <hr className="mt-7 border-2" />
         <button
-          className="mx-auto flex items-center rounded-full border px-5 py-2"
+          className="mx-auto mt-4 flex items-center gap-2 rounded-full border border-blue-600 px-5 py-2 text-blue-600"
           onClick={handleGmail}
         >
           <FaGoogle />
-          <p>Login with google</p>
+          <p className="text-lg font-medium text-black">Login with google</p>
         </button>
       </div>
     </div>

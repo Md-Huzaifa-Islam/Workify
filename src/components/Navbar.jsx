@@ -1,6 +1,7 @@
 import { Avatar, Dropdown } from "flowbite-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../Hooks/CustomHooks";
+import icon from "../../public/image/icon.png";
 
 export default function Navbar() {
   const { user, signout } = useAuth();
@@ -49,15 +50,11 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           to={"/"}
-          className="flex items-center space-x-3 rtl:space-x-reverse"
+          className="flex items-center space-x-2 rtl:space-x-reverse"
         >
-          <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-8"
-            alt="Flowbite Logo"
-          />
+          <img src={icon} className="h-8" alt="Flowbite Logo" />
           <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
-            Flowbite
+            Workify
           </span>
         </Link>
 

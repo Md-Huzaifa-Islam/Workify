@@ -6,12 +6,12 @@ import TestimonialContainer from "../components/TestimonialContainer";
 
 export default function Home() {
   return (
-    <div className="grid gap-24 pb-24">
+    <div className="grid gap-16 pb-16 sm:gap-10 sm:pb-10 md:gap-16 md:pb-16 lg:gap-24 lg:pb-24">
       <Banner />
       <ServicesContainer />
       <TestimonialContainer />
-      <ContactContainer />
       <FaqsContainer />
+      <ContactContainer />
     </div>
   );
 }
