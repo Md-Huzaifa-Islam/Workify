@@ -6,10 +6,9 @@ export default function ProgressOptions({
   setMonth,
   name,
   month,
-  data,
+  uniqueNames,
 }) {
-  const uniqueNames = [...new Set(data.map((item) => item.name))];
-  const uniqueMonth = [...new Set(data.map((item) => item.month))];
+  // const uniqueNames = [...new Set(data.map((item) => item.name))];
   return (
     <div className="flex flex-wrap items-center justify-center gap-5 px-5 sm:px-0">
       <select
@@ -36,42 +35,18 @@ export default function ProgressOptions({
         <option value="" disabled>
           Select a Month
         </option>
-        <option value="January" disabled={!uniqueMonth.includes("January")}>
-          January
-        </option>
-        <option value="February" disabled={!uniqueMonth.includes("February")}>
-          February
-        </option>
-        <option value="March" disabled={!uniqueMonth.includes("March")}>
-          March
-        </option>
-        <option value="April" disabled={!uniqueMonth.includes("April")}>
-          April
-        </option>
-        <option value="May" disabled={!uniqueMonth.includes("May")}>
-          May
-        </option>
-        <option value="June" disabled={!uniqueMonth.includes("June")}>
-          June
-        </option>
-        <option value="July" disabled={!uniqueMonth.includes("July")}>
-          July
-        </option>
-        <option value="August" disabled={!uniqueMonth.includes("August")}>
-          August
-        </option>
-        <option value="September" disabled={!uniqueMonth.includes("September")}>
-          September
-        </option>
-        <option value="October" disabled={!uniqueMonth.includes("October")}>
-          October
-        </option>
-        <option value="November" disabled={!uniqueMonth.includes("November")}>
-          November
-        </option>
-        <option value="December" disabled={!uniqueMonth.includes("December")}>
-          December
-        </option>
+        <option value="January">January</option>
+        <option value="February">February</option>
+        <option value="March">March</option>
+        <option value="April">April</option>
+        <option value="May">May</option>
+        <option value="June">June</option>
+        <option value="July">July</option>
+        <option value="August">August</option>
+        <option value="September">September</option>
+        <option value="October">October</option>
+        <option value="November">November</option>
+        <option value="December">December</option>
       </select>
       <button
         className="btn btn-primary flex items-center justify-center gap-1"
@@ -91,5 +66,5 @@ ProgressOptions.propTypes = {
   setMonth: PropTypes.func.isRequired,
   month: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  data: PropTypes.array.isRequired,
+  uniqueNames: PropTypes.array.isRequired,
 };

@@ -4,32 +4,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import React from "react";
 
-const ProgressTable = ({ data2, month, name }) => {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    if (month != "" && name != "") {
-      const temp = data2.filter(
-        (item) => item.name == name && item.month === month,
-      );
-      setData([...temp]);
-      console.log(data);
-    } else if (name != "") {
-      const temp = data2.filter((item) => item.name == name);
-      setData([...temp]);
-      console.log(data);
-    } else if (month != "") {
-      const temp = data2.filter((item) => item.month === month);
-      setData([...temp]);
-      console.log(data);
-    } else {
-      const temp = data2;
-      setData([...temp]);
-    }
-  }, [name, month]);
-  // Define columns using JSX
+const ProgressTable = ({ data }) => {
   const columns = React.useMemo(
     () => [
       {
@@ -97,9 +75,7 @@ const ProgressTable = ({ data2, month, name }) => {
   );
 };
 ProgressTable.propTypes = {
-  data2: PropTypes.array.isRequired,
-  month: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
+  data: PropTypes.array,
 };
 
 export default ProgressTable;
