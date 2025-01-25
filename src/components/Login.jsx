@@ -1,12 +1,15 @@
 import { FaGoogle } from "react-icons/fa";
 import { MdOutlineMail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { useAuth } from "../Hooks/CustomHooks";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 import LoginAnimation from "./LoginAnimation";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import useAuth from "../Hooks/CustomHooks";
 
 export default function Login() {
   const { SingInGmail, SignInEmail } = useAuth();
+  const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
   // handle login
   const handleLogin = (e) => {
@@ -14,9 +17,10 @@ export default function Login() {
     const formData = new FormData(e.target);
     const formObject = Object.fromEntries(formData.entries());
     SignInEmail(formObject.email, formObject.password)
-      .then((userCredential) => {
+      .then((user) => {
+        toast.success(`Welcome Back ${user.user?.displayName}`);
         // Signed in
-        console.log(userCredential.user);
+        navigate("/");
         // ...
       })
       .catch((error) => {
@@ -37,9 +41,13 @@ export default function Login() {
           verified: false,
           created: new Date().getTime(),
         };
+
         axiosPublic
           .put("adduser", payload)
-          .then((res) => console.log(res.data))
+          .then(() => {
+            toast.success(`Welcome back ${resUser.displayName}`);
+            navigate("/");
+          })
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));

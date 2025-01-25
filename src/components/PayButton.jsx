@@ -64,7 +64,7 @@ const PayButton = ({ data }) => {
       <button
         disabled={!verified}
         onClick={toggleModal}
-        className="block rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="mx-auto block rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-slate-500 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         type="button"
       >
         Pay
@@ -108,12 +108,16 @@ const PayButton = ({ data }) => {
             </div>
 
             {/* Modal body */}
-            <form className="mx-auto max-w-sm" onSubmit={handleSubmit}>
+            <form
+              className="mx-auto grid max-w-sm gap-2 py-8"
+              onSubmit={handleSubmit}
+            >
               <p>Amount : {salary} $ </p>
 
               <DatePicker
                 // For extracting the value
                 selected={month} // No state needed
+                className="w-full"
                 // Handles month selection
                 onChange={(d) => setMonth(d)}
                 dateFormat="MMMM" // Displays only month name
@@ -122,6 +126,7 @@ const PayButton = ({ data }) => {
                 showYearPicker={false}
               />
               <DatePicker
+                className="w-full"
                 selected={year}
                 onChange={(d) => setYear(d)}
                 renderYearContent={renderYearContent}

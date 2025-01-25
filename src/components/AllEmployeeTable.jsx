@@ -7,6 +7,7 @@ import {
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import Loading from "./Loading";
 import React from "react";
+import Swal from "sweetalert2";
 
 const DemoEmployeeTable = () => {
   const axiosSecure = useAxiosSecure();
@@ -69,8 +70,25 @@ const DemoEmployeeTable = () => {
         header: "Role",
         cell: ({ row }) => (
           <button
+            className="dark:focus:ring-blue-800z mx-auto block w-24 rounded-lg bg-blue-700 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700"
             onClick={() => {
-              mutation.mutate(row.original?._id);
+              Swal.fire({
+                title: `Are you sure you want to ${row.original?.role !== "HR" ? "remove him as HR" : "make him HR"}?`,
+
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: `Yes, ${row.original?.role !== "HR" ? "remove" : "make"} !`,
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  mutation.mutate(row.original?._id);
+                  Swal.fire({
+                    title: "Done !",
+                    icon: "success",
+                  });
+                }
+              });
             }}
           >
             {row.original?.role !== "HR" && "Make"} HR
@@ -78,12 +96,30 @@ const DemoEmployeeTable = () => {
         ),
       },
       {
-        id: "role",
-        header: "Role",
+        id: "fired",
+        header: "Fired",
         cell: ({ row }) => (
           <button
+            className={`dark:focus:ring-blue-800z mx-auto block w-14 rounded-lg ${row.original?.fired === true ? "bg-slate-500" : "bg-red-500"} py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700`}
             onClick={() => {
-              mutation2.mutate(row.original?._id);
+              Swal.fire({
+                title: `Are you sure you want to ${row.original?.fired === true ? "add him" : "Fire him"}?`,
+
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: `Yes, ${row.original?.fired === true ? "add" : "fire"}`,
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  mutation2.mutate(row.original?._id);
+                  Swal.fire({
+                    title: "Fired!",
+                    text: "This employee is fired",
+                    icon: "success",
+                  });
+                }
+              });
             }}
           >
             {row.original?.fired === true ? "Fired" : "Fire"}

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import DatePicker from "react-datepicker";
-import { useAuth } from "../Hooks/CustomHooks";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useAuth from "../Hooks/CustomHooks";
 const CrudModal = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { task, hour, _id, date } = data;
@@ -59,7 +59,7 @@ const CrudModal = ({ data }) => {
       {/* Modal toggle button */}
       <button
         onClick={toggleModal}
-        className="block rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="mx-auto block rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         type="button"
       >
         Edit
@@ -103,7 +103,10 @@ const CrudModal = ({ data }) => {
             </div>
 
             {/* Modal body */}
-            <form className="mx-auto max-w-sm" onSubmit={handleSubmit}>
+            <form
+              className="mx-auto grid max-w-sm grid-rows-3 gap-2 py-8"
+              onSubmit={handleSubmit}
+            >
               <select
                 value={task2}
                 name="task"
@@ -121,7 +124,7 @@ const CrudModal = ({ data }) => {
                 <option value="custom">Custom Task</option>
               </select>
 
-              <div className="mb-5">
+              <div className="">
                 <input
                   type="number"
                   name="hour"
@@ -131,6 +134,7 @@ const CrudModal = ({ data }) => {
                 />
               </div>
               <DatePicker
+                className="w-full"
                 showIcon
                 name="date"
                 selected={startDate}
@@ -141,7 +145,7 @@ const CrudModal = ({ data }) => {
                 type="submit"
                 className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
               >
-                Submit
+                Update
               </button>
             </form>
           </div>

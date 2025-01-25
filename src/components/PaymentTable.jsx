@@ -7,7 +7,7 @@ import {
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import Loading from "./Loading";
 import React from "react";
-import { useAuth } from "../Hooks/CustomHooks";
+import useAuth from "../Hooks/CustomHooks";
 
 const PaymentTable = () => {
   const { user } = useAuth();

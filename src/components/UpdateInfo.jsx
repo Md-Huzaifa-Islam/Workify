@@ -1,7 +1,7 @@
 import { RiLockPasswordFill } from "react-icons/ri";
-import { useAuth } from "../Hooks/CustomHooks";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../Hooks/CustomHooks";
 
 export default function Register() {
   const { userDB, updateDb, setUserDb } = useAuth();

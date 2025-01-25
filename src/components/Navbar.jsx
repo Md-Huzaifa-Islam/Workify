@@ -1,7 +1,7 @@
 import { Avatar, Dropdown } from "flowbite-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { useAuth } from "../Hooks/CustomHooks";
 import icon from "../../public/image/icon.png";
+import useAuth from "../Hooks/CustomHooks";
 
 export default function Navbar() {
   const { user, signout } = useAuth();

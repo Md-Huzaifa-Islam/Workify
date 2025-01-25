@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "../Hooks/CustomHooks";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { format } from "date-fns";
 import Loading from "./Loading";
+import useAuth from "../Hooks/CustomHooks";
 
 const Profile = () => {
   const { user } = useAuth();

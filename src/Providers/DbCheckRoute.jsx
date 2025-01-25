@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import { useAuth } from "../Hooks/CustomHooks";
 import Loading from "../components/Loading";
 import { Navigate } from "react-router-dom";
+import useAuth from "../Hooks/CustomHooks";
 
 function DbCheckRoute({ children }) {
   const { loading, userDB, user } = useAuth();

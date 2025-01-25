@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "../Hooks/CustomHooks";
+import useAuth from "../Hooks/CustomHooks";
 
 export default function AddFaqSection() {
   const { user } = useAuth();

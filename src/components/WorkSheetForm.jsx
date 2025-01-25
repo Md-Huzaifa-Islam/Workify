@@ -2,9 +2,10 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
-import { useAuth } from "../Hooks/CustomHooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
+import useAuth from "../Hooks/CustomHooks";
+import { toast } from "react-toastify";
 
 export default function WorkSheetForm() {
   const queryClient = useQueryClient();
@@ -33,6 +34,7 @@ export default function WorkSheetForm() {
     mutationFn: addtask,
     onSuccess: () => {
       // Invalidate and refetch
+      toast.success("The task is added");
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });

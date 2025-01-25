@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import PayButton from "./PayButton";
 import Loading from "./Loading";
+import Swal from "sweetalert2";
 
 const EmployeeTable = () => {
   const axiosSecure = useAxiosSecure();
@@ -57,8 +58,27 @@ const EmployeeTable = () => {
         header: "Verify",
         cell: ({ row }) => (
           <button
-            className="rounded bg-blue-500 px-3 py-1 text-white"
-            onClick={() => handleVerify(row.original._id)}
+            className="mx-auto w-max rounded bg-blue-500 px-3 py-1 text-white"
+            onClick={() => {
+              Swal.fire({
+                title: `Are you sure you wanna ${row.original?.verified ? "remove verification of" : "verify"} ${row.original.name}?`,
+
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: `Yes, ${row.original?.verified ? "remove verification" : "Verify him"}!`,
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  handleVerify(row.original._id);
+                  Swal.fire({
+                    title: `${row.original?.verified ? "Removed verification" : "Verified"}!`,
+
+                    icon: "success",
+                  });
+                }
+              });
+            }}
           >
             {row.original?.verified ? "✅" : "❌"}
           </button>
@@ -75,7 +95,7 @@ const EmployeeTable = () => {
         cell: ({ row }) => (
           <Link
             to={`/dashboard/details/${row.original?.email}`}
-            className="text-blue-600 underline"
+            className="text-center text-blue-600 underline"
           >
             Details
           </Link>

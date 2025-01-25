@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { AuthContext } from "../Contexts/Context";
 import { auth } from "../Firebase/Firebase";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { toast } from "react-toastify";
 
 const provider = new GoogleAuthProvider();
 
@@ -50,6 +51,7 @@ export default function AuthProvider({ children }) {
 
   // sign out
   const signout = () => {
+    toast(`Goodbye ${user?.displayName}`);
     return signOut(auth);
   };
   // observer

@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { useAuth } from "../Hooks/CustomHooks";
+import useAuth from "../Hooks/CustomHooks";
 
 export default function DashBoardContainer() {
   const { role } = useAuth();

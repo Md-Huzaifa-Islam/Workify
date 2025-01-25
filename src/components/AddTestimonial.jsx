@@ -3,8 +3,8 @@ import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
-import { useAuth } from "../Hooks/CustomHooks";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../Hooks/CustomHooks";
 const AddTestimonial = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();

@@ -4,7 +4,7 @@ import { useState } from "react";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 const AdminPaymentModal = ({ data }) => {
-  const { _id, salary, name } = data;
+  const { _id, salary, name, paymentDate } = data;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
@@ -32,7 +32,6 @@ const AdminPaymentModal = ({ data }) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-
     setLoading(true);
     const amount = e.target.amount.value * 100;
     const { data } = await axiosSecure.post("stripe", { amount });
@@ -55,10 +54,11 @@ const AdminPaymentModal = ({ data }) => {
       {/* Modal toggle button */}
       <button
         onClick={toggleModal}
-        className="block rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        disabled={paymentDate}
+        className="block rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-slate-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         type="button"
       >
-        Pay
+        {paymentDate ? "Paid" : "Pay"}
       </button>
 
       {/* Modal */}
@@ -99,9 +99,18 @@ const AdminPaymentModal = ({ data }) => {
             </div>
 
             {/* Modal body */}
-            <form className="mx-auto max-w-sm" onSubmit={handleClick}>
-              <input type="number" name="amount" defaultValue={salary} />
-              <CardElement className="rounded border p-3" />
+            <form
+              className="mx-auto grid max-w-sm gap-4"
+              onSubmit={handleClick}
+            >
+              <div className="flex flex-col">
+                <label htmlFor="">Salary</label>
+                <input type="number" name="amount" defaultValue={salary} />
+              </div>
+              <div>
+                <label htmlFor="">You card</label>
+                <CardElement className="rounded border p-3" />
+              </div>
               <button
                 type="submit"
                 disabled={!stripe || loading}

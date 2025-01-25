@@ -4,11 +4,15 @@ import { BsCashCoin } from "react-icons/bs";
 import { IoIosPerson } from "react-icons/io";
 import { MdOutlineMail } from "react-icons/md";
 import { RiBankCard2Fill, RiLockPasswordFill } from "react-icons/ri";
-import { useAuth } from "../Hooks/CustomHooks";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FaGoogle } from "react-icons/fa";
+import useAuth from "../Hooks/CustomHooks";
 
 export default function Register() {
-  const { SignUpEmail, update, setUser } = useAuth();
+  const { SignUpEmail, update, setUser, SingInGmail } = useAuth();
+  const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
   const [error, setError] = useState("");
   const handleSignUp = async (e) => {
@@ -50,6 +54,8 @@ export default function Register() {
               .then((userCredentials) => {
                 update(formObject.name, formObject.image).then(() => {
                   setUser({ ...userCredentials.user });
+                  navigate("/");
+                  toast.success(`Welcome to the family ${formObject.name}`);
                   delete formObject.password;
                   axiosPublic
                     .put("adduser", formObject)
@@ -63,6 +69,30 @@ export default function Register() {
         })
         .catch((err) => console.log(err));
     }
+  };
+  // handle gmail login
+  const handleGmail = (e) => {
+    e.preventDefault();
+    SingInGmail()
+      .then((res) => {
+        const resUser = res.user;
+        const payload = {
+          name: resUser.displayName,
+          email: resUser.email,
+          role: "Employee",
+          verified: false,
+          created: new Date().getTime(),
+        };
+
+        axiosPublic
+          .put("adduser", payload)
+          .then(() => {
+            toast.success(`Welcome to the family ${resUser.displayName}`);
+            navigate("/");
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -214,6 +244,14 @@ export default function Register() {
             Register
           </button>
         </form>
+        <hr className="mx-auto mt-7 max-w-3xl border-2" />
+        <button
+          className="mx-auto mt-4 flex items-center gap-2 rounded-full border border-blue-600 px-5 py-2 text-blue-600"
+          onClick={handleGmail}
+        >
+          <FaGoogle />
+          <p className="text-lg font-medium text-black">Signup with google</p>
+        </button>
       </div>
     </div>
   );

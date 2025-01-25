@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import SectionHeader from "./SectionHeader";
 
 const DetailsChart = () => {
   const { id } = useParams();
@@ -33,10 +34,13 @@ const DetailsChart = () => {
   }
   console.log(data);
   return (
-    <div>
+    <div className="pt-10">
+      <SectionHeader heading="Payment History" subHeading="" />
       {data && data.length == 0 ? (
         <div>
-          <p className="text-center">This employee is not paid yet</p>
+          <p className="text-center text-2xl font-medium text-red-400">
+            This employee is not paid yet
+          </p>
         </div>
       ) : (
         <div className="mx-auto max-w-4xl">
