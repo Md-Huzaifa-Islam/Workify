@@ -54,7 +54,7 @@ const AddTestimonial = () => {
       {/* Modal toggle button */}
       <button
         onClick={toggleModal}
-        className="block rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="block rounded-lg bg-blue-700 px-5 py-2.5 text-center text-lg font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         type="button"
       >
         Add Your Recommendation
@@ -70,9 +70,10 @@ const AddTestimonial = () => {
             className="relative w-full max-w-md rounded-lg bg-white p-4 shadow dark:bg-gray-700"
             onClick={(e) => e.stopPropagation()} // Prevent click propagation to parent
           >
-            <div className="flex items-center justify-between rounded-t border-b p-4 dark:border-gray-600 md:p-5">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Review Bos
+            <div className="grid grid-cols-3 justify-items-center rounded-t border-b p-4 dark:border-gray-600 md:p-5">
+              <div></div>
+              <h3 className="mx-auto whitespace-nowrap text-2xl font-bold dark:text-white">
+                Add your review
               </h3>
               <button
                 onClick={toggleModal}
@@ -103,14 +104,15 @@ const AddTestimonial = () => {
               <div className="mb-5">
                 <label
                   htmlFor="review"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                  className="mb-2 block text-lg font-medium text-gray-900 dark:text-white"
                 >
                   Your review
                 </label>
 
                 <textarea
                   name="review"
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                  rows={4}
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                   placeholder="Your review"
                   required
                 ></textarea>
@@ -118,12 +120,12 @@ const AddTestimonial = () => {
               <div className="mb-5">
                 <label
                   htmlFor="rating"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                  className="mb-2 block text-lg font-medium text-gray-900 dark:text-white"
                 >
                   Give Rating
                 </label>
                 <Rating
-                  style={{ maxWidth: 140 }}
+                  style={{ maxWidth: 150 }}
                   value={rating}
                   onChange={setRating}
                   isRequired
@@ -133,9 +135,9 @@ const AddTestimonial = () => {
               <button
                 type="submit"
                 disabled={rating == 0}
-                className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-slate-500 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
+                className="w-full rounded-lg bg-blue-700 px-8 py-3 text-center text-lg font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-slate-500 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
               >
-                Submit
+                Add
               </button>
             </form>
           </div>
