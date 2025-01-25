@@ -70,6 +70,7 @@ const WorkSheetTable = () => {
         header: "Delete",
         cell: ({ row }) => (
           <button
+            className="block rounded-lg bg-red-500 px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 focus:ring-blue-300"
             onClick={() => {
               mutation.mutate(row?.original?._id);
             }}

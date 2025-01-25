@@ -38,10 +38,18 @@ const DemoEmployeeTable = () => {
       queryClient.invalidateQueries(["allusers"]);
     },
   });
-  const { isLoading, isError, data } = useQuery({
+  const {
+    isLoading,
+    isError,
+    data: data2,
+  } = useQuery({
     queryKey: ["allusers"],
     queryFn: getUsers,
   });
+  let data = [];
+  if (data2) {
+    data = data2.filter((d) => d.role != "Admin");
+  }
 
   //   only task related to table
 

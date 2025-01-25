@@ -56,6 +56,7 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const disconnect = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      console.log(currentUser);
       if (currentUser) {
         axiosSecure
           .post("jwt", {

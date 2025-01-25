@@ -11,7 +11,7 @@ export default function ProgressOptions({
   const uniqueNames = [...new Set(data.map((item) => item.name))];
   const uniqueMonth = [...new Set(data.map((item) => item.month))];
   return (
-    <div className="flex items-center justify-center gap-5">
+    <div className="flex flex-wrap items-center justify-center gap-5 px-5 sm:px-0">
       <select
         value={name}
         onChange={(e) => {

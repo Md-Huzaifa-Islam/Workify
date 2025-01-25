@@ -60,7 +60,7 @@ export default function WorkSheetForm() {
   return (
     <div>
       <form
-        className="mx-auto flex max-w-sm items-center justify-center gap-5"
+        className="mx-auto flex flex-wrap items-center justify-center gap-5"
         onSubmit={handleSubmit}
       >
         <select
@@ -76,8 +76,7 @@ export default function WorkSheetForm() {
           <option value="Sales">Sales</option>
           <option value="Support">Support</option>
           <option value="Content">Content</option>
-          <option value="Paper-work">Paper-work</option>
-          <option value="custom">Custom Task</option>
+          <option value="Paper work">Paper-work</option>
         </select>
 
         <input
@@ -98,7 +97,7 @@ export default function WorkSheetForm() {
           type="submit"
           className="h-full rounded-lg bg-blue-800 px-5 py-2 text-white"
         >
-          Submit
+          Add
         </button>
       </form>
     </div>

@@ -32,8 +32,9 @@ const AdminPaymentModal = ({ data }) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+
     setLoading(true);
-    const amount = e.target.amount.value;
+    const amount = e.target.amount.value * 100;
     const { data } = await axiosSecure.post("stripe", { amount });
     const { clientSecret, transactionId } = data;
     const { error, paymentIntent } = await stripe.confirmCardPayment(
