@@ -8,6 +8,7 @@ import useAxiosSecure from "../Hooks/useAxiosSecure";
 import Loading from "./Loading";
 import React from "react";
 import Swal from "sweetalert2";
+import EditSalary from "./EditSalary";
 
 const DemoEmployeeTable = () => {
   const axiosSecure = useAxiosSecure();
@@ -64,6 +65,16 @@ const DemoEmployeeTable = () => {
       {
         accessorKey: "designation",
         header: "Designation",
+      },
+      {
+        id: "salary",
+        header: "salary",
+        cell: ({ row }) => (
+          <div className="grid grid-cols-2 items-center justify-items-start gap-2">
+            <p className="justify-self-end">{row.original?.salary} $</p>
+            <EditSalary data={row.original} />
+          </div>
+        ),
       },
       {
         id: "role2",

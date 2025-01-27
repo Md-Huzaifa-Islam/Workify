@@ -8,8 +8,9 @@ const PayButton = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { _id, salary, name, email, verified } = data;
   const axiosSecure = useAxiosSecure();
-  const [month, setMonth] = useState(new Date());
-  const [year, setYear] = useState(new Date());
+  const [month, setMonth] = useState();
+  const [year, setYear] = useState();
+  const [error, setError] = useState("");
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -23,8 +24,8 @@ const PayButton = ({ data }) => {
   const mutation = useMutation({
     mutationFn: editTask,
     onSuccess: () => {
-      setMonth(new Date());
-      setYear(new Date());
+      setMonth();
+      setYear();
       toggleModal();
     },
   });
@@ -48,9 +49,16 @@ const PayButton = ({ data }) => {
     formObject.month = monthName;
     formObject.year = year2;
     formObject.payDate = milliseconds;
-
+    axiosSecure
+      .get(`checkbyhr?month=${monthName}&year=${year2}&email=${email}`)
+      .then((res) => {
+        if (res.data?.allow) {
+          mutation.mutate(formObject);
+        } else {
+          setError("Payment for this month and year is paid");
+        }
+      });
     // post the new task
-    mutation.mutate(formObject);
   };
 
   const renderYearContent = (year) => {
@@ -118,8 +126,12 @@ const PayButton = ({ data }) => {
                 // For extracting the value
                 selected={month} // No state needed
                 className="w-full"
+                placeholderText="Select Month"
                 // Handles month selection
-                onChange={(d) => setMonth(d)}
+                onChange={(d) => {
+                  setMonth(d);
+                  setError("");
+                }}
                 dateFormat="MMMM" // Displays only month name
                 showMonthYearPicker // Enables month-only view
                 showYearDropdown={false} // Hides year dropdown
@@ -127,18 +139,23 @@ const PayButton = ({ data }) => {
               />
               <DatePicker
                 className="w-full"
+                placeholderText="Select year"
                 selected={year}
-                onChange={(d) => setYear(d)}
+                onChange={(d) => {
+                  setYear(d);
+                  setError("");
+                }}
                 renderYearContent={renderYearContent}
                 showYearPicker
                 dateFormat="yyyy"
               />
-
+              <p className="text-center text-red-500">{error}</p>
               <button
                 type="submit"
-                className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
+                disabled={!month || !year}
+                className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-slate-500 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:w-auto"
               >
-                Submit
+                Pay
               </button>
             </form>
           </div>

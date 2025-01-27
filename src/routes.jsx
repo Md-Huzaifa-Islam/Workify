@@ -19,6 +19,7 @@ import EmployeeTable from "./components/EmployeeTable";
 import PaymentHistory from "./components/PaymentHistory";
 import DbCheckRoute from "./Providers/DbCheckRoute";
 import UpdateInfo from "./components/UpdateInfo";
+import FiredPage from "./components/FiredPage";
 // import PrivateRoute from "./components/Dashboard";
 
 export const router = createBrowserRouter([
@@ -136,5 +137,9 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: "/fired",
+    element: <FiredPage />,
   },
 ]);

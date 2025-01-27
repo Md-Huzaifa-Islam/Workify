@@ -1,7 +1,11 @@
 import axios from "axios";
 import { useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { signOut } from "firebase/auth";
+import { auth } from "../Firebase/Firebase";
+
 // import useAuth from "./CustomHooks";
 
 const axiosInstance = axios.create({
@@ -10,8 +14,8 @@ const axiosInstance = axios.create({
 });
 
 const useAxiosSecure = () => {
+  // Ensure it's correctly imported
   // const navigate = useNavigate();
-  // const { signout } = useAuth(); // Ensure it's correctly imported
 
   useEffect(() => {
     const interceptor = axiosInstance.interceptors.response.use(
@@ -25,7 +29,11 @@ const useAxiosSecure = () => {
           try {
             // Perform signout and navigation
             // await signout();
-            toast.error("Your session has expired. Please log in again.");
+            signOut(auth).then(() => {
+              // Sign-out successful.
+              toast.error("Your session has expired. Please log in again.");
+            });
+
             // navigate("/login", { replace: true });
           } catch (signoutError) {
             console.error("Error during signout:", signoutError);
