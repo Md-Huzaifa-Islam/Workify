@@ -1,0 +1,27 @@
+[{
+  "_id": {
+    "$oid": "6798645fd6735930867a4adc"
+  },
+  "name": "Yuli Yang",
+  "review": "This platform has simplified our workflow immensely. Tracking employee tasks and payment history used to be a headache, but now it's all seamless. The user-friendly interface and advanced features make it a must-have for any business!",
+  "photo": "https://i.ibb.co.com/pZkxyMY/image.jpg",
+  "rating": 5
+},
+{
+  "_id": {
+    "$oid": "6798649fd6735930867a4add"
+  },
+  "name": "Scarlet Elliott",
+  "review": "As our company scaled, managing employee records and payments became a challenge. This platform has been instrumental in keeping things organized and running smoothly. The only thing I'd love to see is more customization options!",
+  "photo": "https://i.ibb.co.com/MBvJm6z/image2.webp",
+  "rating": 4
+},
+{
+  "_id": {
+    "$oid": "679864ced6735930867a4ade"
+  },
+  "name": "Chloe Erickson",
+  "review": "Data security was my top concern, but this platform checks all the boxes. The encryption and compliance features are impressive, and the interface is incredibly easy to navigate. Highly recommended for startups and established companies alike!",
+  "photo": "https://i.ibb.co.com/jRK7w6k/image2.jpg",
+  "rating": 5
+}]

@@ -9,7 +9,7 @@ import { auth } from "../Firebase/Firebase";
 // import useAuth from "./CustomHooks";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000/",
+  baseURL: "https://workify-server.vercel.app/",
   withCredentials: true,
 });
 

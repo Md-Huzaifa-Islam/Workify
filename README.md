@@ -4,13 +4,9 @@ A comprehensive web-based solution to manage employee workloads, salary payments
 
 ---
 
----
-
 ## Live Demo
 
 [Live Demo](https://employee-management-62d65.web.app/)
-
----
 
 ---
 
