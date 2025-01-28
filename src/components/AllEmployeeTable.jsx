@@ -10,7 +10,7 @@ import React from "react";
 import Swal from "sweetalert2";
 import EditSalary from "./EditSalary";
 
-const DemoEmployeeTable = () => {
+const AllEmployeeTable = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const getUsers = async () => {
@@ -188,4 +188,4 @@ const DemoEmployeeTable = () => {
   );
 };
 
-export default DemoEmployeeTable;
+export default AllEmployeeTable;

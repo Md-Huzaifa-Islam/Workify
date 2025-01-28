@@ -15,6 +15,7 @@ function DbCheckRoute({ children }) {
     return <>{children}</>;
   }
   if (!userDB) {
+    console.log("here");
     return <Loading />;
   }
   if (userDB) {

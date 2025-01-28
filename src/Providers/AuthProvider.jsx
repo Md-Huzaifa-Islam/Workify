@@ -110,6 +110,7 @@ export default function AuthProvider({ children }) {
     signout,
     update,
     setUser,
+    setLoading,
     role,
     userDB,
     updateDb,

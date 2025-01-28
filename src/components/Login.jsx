@@ -38,6 +38,7 @@ export default function Login() {
           name: resUser.displayName,
           email: resUser.email,
           role: "Employee",
+          image: resUser?.photoURL,
           verified: false,
           created: new Date().getTime(),
         };

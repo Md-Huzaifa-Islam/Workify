@@ -2,9 +2,10 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../Hooks/CustomHooks";
+import SectionHeader from "./SectionHeader";
 
 export default function Register() {
-  const { userDB, updateDb, setUserDb } = useAuth();
+  const { userDB, updateDb, setUserDb, setLoading } = useAuth();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
   const handleSignUp = async (e) => {
@@ -17,6 +18,7 @@ export default function Register() {
       .then(() => {
         updateDb().then((res) => {
           setUserDb({ ...res.data });
+          setLoading(false);
           navigate("/");
         });
       });
@@ -24,7 +26,10 @@ export default function Register() {
 
   return (
     <div>
-      <p>Login</p>
+      <SectionHeader
+        heading="Fill up these"
+        subHeading="Sorry for the inconvenience but you need to give these data to continue"
+      />
       <div>
         <form className="mx-auto max-w-md" onSubmit={handleSignUp}>
           <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
