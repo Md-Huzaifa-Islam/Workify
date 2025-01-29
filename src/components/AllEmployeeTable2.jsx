@@ -10,7 +10,7 @@ import React from "react";
 import Swal from "sweetalert2";
 import EditSalary from "./EditSalary";
 
-const AllEmployeeTable = () => {
+const AllEmployeeTable2 = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const getUsers = async () => {
@@ -62,10 +62,7 @@ const AllEmployeeTable = () => {
         accessorKey: "name",
         header: "Name",
       },
-      {
-        accessorKey: "designation",
-        header: "Designation",
-      },
+
       {
         id: "salary",
         header: "salary",
@@ -163,7 +160,7 @@ const AllEmployeeTable = () => {
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="border border-gray-300 bg-gray-200 px-4 py-2"
+                      className="border border-gray-300 bg-gray-200 px-2 py-2"
                     >
                       {header.isPlaceholder
                         ? null
@@ -182,7 +179,7 @@ const AllEmployeeTable = () => {
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className="border border-gray-300 px-4 py-2"
+                      className="border border-gray-300 px-2 py-2"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -204,4 +201,4 @@ const AllEmployeeTable = () => {
   );
 };
 
-export default AllEmployeeTable;
+export default AllEmployeeTable2;

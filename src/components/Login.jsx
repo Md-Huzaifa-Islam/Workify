@@ -24,7 +24,7 @@ export default function Login() {
         // ...
       })
       .catch((error) => {
-        console.log(error);
+        toast.error(error);
       });
   };
 
@@ -49,9 +49,9 @@ export default function Login() {
             toast.success(`Welcome back ${resUser.displayName}`);
             navigate("/");
           })
-          .catch((err) => console.log(err));
+          .catch((err) => toast.error(err));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => toast.error(err));
   };
   return (
     <div className="grid items-center justify-items-center px-5 md:container sm:grid-cols-2 md:mx-auto">

@@ -2,14 +2,17 @@ import { Avatar, Dropdown } from "flowbite-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import icon from "../../public/image/icon.png";
 import useAuth from "../Hooks/CustomHooks";
+import { toast } from "react-toastify";
 
 export default function Navbar() {
   const { user, signout } = useAuth();
   const location = useLocation().pathname;
   const handleLogout = () => {
     signout()
-      .then(() => console.log("logged out"))
-      .catch((err) => console.log(err));
+      .then(() => {
+        toast.success("Good Bye");
+      })
+      .catch((err) => toast.error(err));
   };
   const links = (
     <>
@@ -68,21 +71,14 @@ export default function Navbar() {
               label={<Avatar alt="User avatar" img={user?.photoURL} rounded />}
               className="" // Ensure alignment starts at the button's left
             >
-              <Dropdown.Header>
-                <span className="block text-sm">John Doe</span>
-                <span className="block truncate text-sm font-medium">
-                  johndoe@example.com
-                </span>
-              </Dropdown.Header>
               <Dropdown.Item>
-                <a href="/profile">Profile</a>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <a href="/settings">Settings</a>
-              </Dropdown.Item>
-              <Dropdown.Divider />
-              <Dropdown.Item onClick={() => console.log("Logout clicked")}>
-                Logout
+                <button
+                  onClick={handleLogout}
+                  type="button"
+                  className="mr-3 rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  log out
+                </button>
               </Dropdown.Item>
             </Dropdown>
           )}
@@ -104,17 +100,6 @@ export default function Navbar() {
               >
                 SignUp
               </Link>
-            </>
-          )}
-          {!user || (
-            <>
-              <button
-                onClick={handleLogout}
-                type="button"
-                className="mr-3 rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                log out
-              </button>
             </>
           )}
 

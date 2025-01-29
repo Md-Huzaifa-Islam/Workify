@@ -1,20 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import {
-  useReactTable,
-  getCoreRowModel,
   flexRender,
+  getCoreRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
-import Loading from "./Loading";
+import { format } from "date-fns";
 import React from "react";
-import useAuth from "../Hooks/CustomHooks";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import AdminPaymentModal from "./AdminPaymentModal";
+import Loading from "./Loading";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
-const PaymentTable = () => {
-  const { user } = useAuth();
+const PayRollsTable2 = () => {
+  const stripePromise = loadStripe(import.meta.env.VITE_stripe);
   const axiosSecure = useAxiosSecure();
-
   const getPayRolls = async () => {
-    const { data } = await axiosSecure.get(`ownpayment?email=${user.email}`);
+    const { data } = await axiosSecure.get(`payrolls`);
     return data;
   };
 
@@ -22,11 +24,20 @@ const PaymentTable = () => {
     queryKey: ["payrolls"],
     queryFn: getPayRolls,
   });
+
   //   only task related to table
 
   // Define columns using JSX
   const columns = React.useMemo(
     () => [
+      {
+        accessorKey: "name",
+        header: "Name",
+      },
+      {
+        accessorKey: "salary",
+        header: "Salary",
+      },
       {
         accessorKey: "month",
         header: "Month",
@@ -36,15 +47,27 @@ const PaymentTable = () => {
         header: "Year",
       },
       {
-        accessorKey: "salary",
-        header: "Amount",
+        id: "paymentDate",
+        header: "Payment Date",
+        cell: ({ row }) => (
+          <p>
+            {row?.original?.paymentDate
+              ? `${format(row?.original?.paymentDate, "dd/MM/yyyy")}`
+              : ""}
+          </p>
+        ),
       },
       {
-        accessorKey: "transactionId",
-        header: "Transaction Id",
+        id: "pay2",
+        header: "Pay",
+        cell: ({ row }) => (
+          <Elements stripe={stripePromise}>
+            <AdminPaymentModal data={row?.original} />
+          </Elements>
+        ),
       },
     ],
-    [],
+    [stripePromise],
   );
 
   const table = useReactTable({
@@ -60,13 +83,13 @@ const PaymentTable = () => {
     <div className="w-full p-4">
       {data.length > 0 ? (
         <table className="min-w-full border-collapse border border-gray-300 text-center">
-          <thead className="text-sm sm:text-base">
+          <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="border border-gray-300 bg-gray-200 px-1 py-2 sm:px-4"
+                    className="border border-gray-300 bg-gray-200 px-2 py-2"
                   >
                     {header.isPlaceholder
                       ? null
@@ -79,13 +102,13 @@ const PaymentTable = () => {
               </tr>
             ))}
           </thead>
-          <tbody className="text-sm sm:text-base">
+          <tbody>
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    className="border border-gray-300 px-1 py-2 sm:px-4"
+                    className="border border-gray-300 px-2 py-2"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
@@ -96,11 +119,11 @@ const PaymentTable = () => {
         </table>
       ) : (
         <p className="pt-10 text-center text-xl font-medium sm:text-3xl">
-          You don&apos;t have any previous payment to show
+          No payment made or due
         </p>
       )}
     </div>
   );
 };
 
-export default PaymentTable;
+export default PayRollsTable2;

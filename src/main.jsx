@@ -8,6 +8,7 @@ import "flowbite"; // Ensure Flowbite components are functional
 import "./index.css";
 import { router } from "./routes";
 import AuthProvider from "./Providers/AuthProvider";
+import { HelmetProvider } from "react-helmet-async";
 
 // Create a QueryClient instance for React Query
 const queryClient = new QueryClient();
@@ -16,26 +17,28 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     {/* AuthProvider ensures authentication context is available globally */}
-    <AuthProvider>
-      {/* QueryClientProvider integrates React Query for state management */}
-      <QueryClientProvider client={queryClient}>
-        {/* RouterProvider for handling app routing */}
-        <RouterProvider router={router} />
+    <HelmetProvider>
+      <AuthProvider>
+        {/* QueryClientProvider integrates React Query for state management */}
+        <QueryClientProvider client={queryClient}>
+          {/* RouterProvider for handling app routing */}
+          <RouterProvider router={router} />
 
-        {/* ToastContainer for notifications */}
-        <ToastContainer
-          position="top-center"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-      </QueryClientProvider>
-    </AuthProvider>
+          {/* ToastContainer for notifications */}
+          <ToastContainer
+            position="top-center"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+        </QueryClientProvider>
+      </AuthProvider>
+    </HelmetProvider>
   </StrictMode>,
 );

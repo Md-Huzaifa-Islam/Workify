@@ -18,7 +18,7 @@ const DetailsChart = () => {
   const axiosSecure = useAxiosSecure();
   const getPayments = async () => {
     const { data } = await axiosSecure.get(`details?email=${id}`);
-    console.log(data.length);
+
     return data;
   };
   const { isPending, isError, data, error } = useQuery({
@@ -32,7 +32,7 @@ const DetailsChart = () => {
   if (isError) {
     return <span>Error: {error.message}</span>;
   }
-  console.log(data);
+
   return (
     <div className="pt-10">
       <SectionHeader heading="Payment History" subHeading="" />

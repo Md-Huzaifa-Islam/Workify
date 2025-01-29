@@ -3,6 +3,7 @@ import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { format } from "date-fns";
 import Loading from "./Loading";
 import useAuth from "../Hooks/CustomHooks";
+import { Helmet } from "react-helmet-async";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -21,6 +22,9 @@ const Profile = () => {
 
   return (
     <div className="mx-auto max-w-3xl">
+      <Helmet>
+        <title>Dashboard || Workify</title>
+      </Helmet>
       <div className="mx-5 rounded-lg bg-white p-6 shadow-lg sm:mx-0">
         {/* Profile Header */}
         <div className="flex flex-col items-center gap-6 border-b pb-6 sm:flex-row">

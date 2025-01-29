@@ -59,15 +59,17 @@ export default function Register() {
                   delete formObject.password;
                   axiosPublic
                     .put("adduser", formObject)
-                    .then((res) => console.log(res.data))
-                    .catch((err) => console.log(err));
+                    .then(() => {
+                      //
+                    })
+                    .catch((err) => toast.error(err));
                 });
               })
               .catch((error) => {
-                console.log(error);
+                toast.error(error);
               });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => toast.error(err));
     }
   };
   // handle gmail login
@@ -90,9 +92,9 @@ export default function Register() {
             toast.success(`Welcome to the family ${resUser.displayName}`);
             navigate("/");
           })
-          .catch((err) => console.log(err));
+          .catch((err) => toast.error(err));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => toast.error(err));
   };
 
   return (

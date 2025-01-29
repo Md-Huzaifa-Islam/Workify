@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { AuthContext } from "../Contexts/Context";
 import { auth } from "../Firebase/Firebase";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { toast } from "react-toastify";
 
 const provider = new GoogleAuthProvider();
 
@@ -62,7 +63,7 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const disconnect = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      console.log(currentUser);
+
       if (currentUser) {
         axiosSecure
           .post("jwt", {
@@ -88,7 +89,7 @@ export default function AuthProvider({ children }) {
                   });
               })
               .catch((err) => {
-                console.log(err);
+                toast.error(err);
                 setLoading(false);
               });
           });

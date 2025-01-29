@@ -4,6 +4,7 @@ import useAxiosSecure from "../Hooks/useAxiosSecure";
 import Loading from "./Loading";
 import ProgressOptions from "./ProgressOptions";
 import ProgressTable from "./ProgressTable";
+import SingleHeader from "./SingleHeader";
 
 export default function Progress() {
   const queryClient = useQueryClient();
@@ -35,6 +36,9 @@ export default function Progress() {
   if (isError) return <p>Error loading data!</p>;
   return (
     <div>
+      <div className="pb-2 sm:pb-1 md:pb-2 lg:pb-3">
+        <SingleHeader heading="Progress of all Employee" />
+      </div>
       <div>
         <ProgressOptions
           setMonth={setMonth}

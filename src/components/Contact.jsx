@@ -1,10 +1,14 @@
+import { Helmet } from "react-helmet-async";
 import ContactForm from "./ContactForm";
 import ContactInfo from "./ContactInfo";
 import SectionHeader from "./SectionHeader";
 
 export default function Contact() {
   return (
-    <div>
+    <div className="pt-8 lg:pt-14">
+      <Helmet>
+        <title>Contact Us || Workify</title>
+      </Helmet>
       <SectionHeader
         heading="Get in Touch with Us"
         subHeading="Have questions, feedback, or need assistance? Send us a message, and our team will get back to you promptly."

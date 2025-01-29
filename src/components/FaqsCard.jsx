@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 
 export default function FaqsCard({ faqs }) {
-  console.log(faqs);
   return (
     <div className="grid max-w-xl gap-3 justify-self-end">
       {faqs.map((faq, index) => (

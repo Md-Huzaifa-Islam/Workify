@@ -12,7 +12,7 @@ export default function AddFaqSection() {
       return;
     }
     setError("");
-    console.log(e.target.question.value);
+
     e.target.reset();
   };
   return (

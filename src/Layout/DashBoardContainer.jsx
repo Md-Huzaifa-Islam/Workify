@@ -7,7 +7,7 @@ export default function DashBoardContainer() {
   return (
     <div className="mt-10 flex flex-col items-center sm:pr-5 md:flex-row md:items-start">
       <div className="mr-5 hidden h-max flex-col gap-4 rounded-r-3xl bg-blue-600 px-5 py-8 text-white md:flex">
-        <p className="pb-2 text-2xl font-bold underline">{role} Panel</p>
+        <p className="border-b-2 pb-2 text-2xl font-bold">{role} Panel</p>
         <Link
           className={`rounded-full border px-2 py-1 text-center text-xl font-semibold ${location == "/dashboard" && "bg-white text-blue-600"}`}
           to={"/dashboard"}

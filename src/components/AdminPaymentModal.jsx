@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import Swal from "sweetalert2";
 const AdminPaymentModal = ({ data }) => {
   const { _id, salary, name, paymentDate } = data;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,6 +47,13 @@ const AdminPaymentModal = ({ data }) => {
       setErrorMessage(error.message);
     } else if (paymentIntent.status === "succeeded") {
       mutation.mutate(transactionId);
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Payment is successful !",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
 
@@ -55,7 +63,7 @@ const AdminPaymentModal = ({ data }) => {
       <button
         onClick={toggleModal}
         disabled={paymentDate}
-        className="block rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-slate-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="mx-auto block rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-slate-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 sm:px-5 sm:py-2.5"
         type="button"
       >
         {paymentDate ? "Paid" : "Pay"}

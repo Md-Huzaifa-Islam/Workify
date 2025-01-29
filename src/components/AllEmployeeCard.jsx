@@ -52,7 +52,7 @@ const AllEmployeeCard = () => {
   if (isError) return <p>Error loading data!</p>;
 
   return (
-    <div className="grid justify-items-center gap-6 pl-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7 xl:grid-cols-4 xl:gap-10">
+    <div className="grid justify-items-center gap-6 pl-5 pt-2.5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7 xl:grid-cols-4 xl:gap-10">
       {data &&
         data.map((person) => (
           <div
