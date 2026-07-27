@@ -1,0 +1,18 @@
+services:
+  workify-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: workify-frontend:latest
+    container_name: workify-frontend
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
