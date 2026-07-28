@@ -1,0 +1,33 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH, pull, and redeploy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.PORT || 22 }}
+          script: |
+            set -euo pipefail
+            cd /opt/app/Workify
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            docker compose build
+            docker compose up -d --remove-orphans
+            docker image prune -f
