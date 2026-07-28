@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { EntityAvatar } from "@/components/shared/entity-avatar";
+import { EmptyState } from "@/components/shared/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ApprovalStatus } from "@/types";
 
@@ -142,10 +143,11 @@ export default function ApprovalsPage() {
             ))}
         {!isLoading && pending.length === 0 ? (
           <Card>
-            <CardContent className="flex flex-col items-center gap-2 p-10 text-center text-muted-foreground">
-              <Banknote className="size-6" />
-              You&apos;re all caught up — no pending approvals.
-            </CardContent>
+            <EmptyState
+              icon={Banknote}
+              title="You're all caught up"
+              description="No pending leave or expense approvals right now."
+            />
           </Card>
         ) : null}
       </div>

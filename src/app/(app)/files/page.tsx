@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { EntityAvatar } from "@/components/shared/entity-avatar";
+import { EmptyState } from "@/components/shared/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
@@ -89,37 +90,47 @@ export default function FilesPage() {
         </Select>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {isLoading
-          ? Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-24 w-full rounded-xl" />)
-          : data?.map((file) => {
-              const Icon = TYPE_ICON[file.type] ?? File;
-              return (
-                <Card key={file.id} className="transition-shadow hover:shadow-md">
-                  <CardContent className="space-y-3 p-4">
-                    <div className="flex items-start justify-between">
-                      <div className={`flex size-9 items-center justify-center rounded-lg ${TYPE_COLOR[file.type]}`}>
-                        <Icon className="size-4.5" />
+      {isLoading || (data && data.length > 0) ? (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {isLoading
+            ? Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-24 w-full rounded-xl" />)
+            : data?.map((file) => {
+                const Icon = TYPE_ICON[file.type] ?? File;
+                return (
+                  <Card key={file.id} className="transition-shadow hover:shadow-md">
+                    <CardContent className="space-y-3 p-4">
+                      <div className="flex items-start justify-between">
+                        <div className={`flex size-9 items-center justify-center rounded-lg ${TYPE_COLOR[file.type]}`}>
+                          <Icon className="size-4.5" />
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <p className="truncate text-sm font-medium">{file.name}</p>
-                      <p className="text-xs text-muted-foreground">{formatSize(file.size)}</p>
-                    </div>
-                    <div className="flex items-center justify-between border-t pt-2.5">
-                      <div className="flex items-center gap-1.5">
-                        <EntityAvatar name={file.ownerName} src={file.ownerAvatar} size="sm" />
-                        <span className="text-xs text-muted-foreground">{file.ownerName.split(" ")[0]}</span>
+                      <div>
+                        <p className="truncate text-sm font-medium">{file.name}</p>
+                        <p className="text-xs text-muted-foreground">{formatSize(file.size)}</p>
                       </div>
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(file.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-      </div>
+                      <div className="flex items-center justify-between border-t pt-2.5">
+                        <div className="flex items-center gap-1.5">
+                          <EntityAvatar name={file.ownerName} src={file.ownerAvatar} size="sm" />
+                          <span className="text-xs text-muted-foreground">{file.ownerName.split(" ")[0]}</span>
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(file.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+        </div>
+      ) : (
+        <Card>
+          <EmptyState
+            icon={File}
+            title="No files match your search"
+            description="Try a different keyword or file type, or upload something new."
+          />
+        </Card>
+      )}
     </div>
   );
 }
