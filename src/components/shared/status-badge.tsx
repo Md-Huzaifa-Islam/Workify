@@ -8,6 +8,14 @@ const TONE_CLASSES = {
   primary: "bg-primary/10 text-primary",
 } as const;
 
+const DOT_CLASSES = {
+  success: "bg-success",
+  warning: "bg-warning",
+  destructive: "bg-destructive",
+  neutral: "bg-muted-foreground",
+  primary: "bg-primary",
+} as const;
+
 type Tone = keyof typeof TONE_CLASSES;
 
 const STATUS_TONES: Record<string, Tone> = {
@@ -57,11 +65,12 @@ export function StatusBadge({ status, className }: { status: string; className?:
   return (
     <span
       className={cn(
-        "inline-flex h-5 w-fit shrink-0 items-center rounded-full px-2 text-xs font-medium whitespace-nowrap",
+        "inline-flex h-5 w-fit shrink-0 items-center gap-1.5 rounded-full px-2 text-xs font-medium whitespace-nowrap",
         TONE_CLASSES[tone],
         className,
       )}
     >
+      <span className={cn("size-1.5 shrink-0 rounded-full", DOT_CLASSES[tone])} />
       {formatLabel(status)}
     </span>
   );

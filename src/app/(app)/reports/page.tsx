@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Download } from "lucide-react";
+import { Download, TrendingUp, Wallet, UsersRound } from "lucide-react";
 import { getDashboardCharts, getDashboardStats } from "@/lib/mock-api/dashboard";
 import { getExpenseSummary } from "@/lib/mock-api/expenses";
 import { getPayrollSummary } from "@/lib/mock-api/payroll";
@@ -66,9 +66,18 @@ export default function ReportsPage() {
 
       <Tabs defaultValue="productivity">
         <TabsList>
-          <TabsTrigger value="productivity">Productivity</TabsTrigger>
-          <TabsTrigger value="finance">Finance</TabsTrigger>
-          <TabsTrigger value="headcount">Headcount</TabsTrigger>
+          <TabsTrigger value="productivity" className="gap-1.5">
+            <TrendingUp className="size-3.5" />
+            Productivity
+          </TabsTrigger>
+          <TabsTrigger value="finance" className="gap-1.5">
+            <Wallet className="size-3.5" />
+            Finance
+          </TabsTrigger>
+          <TabsTrigger value="headcount" className="gap-1.5">
+            <UsersRound className="size-3.5" />
+            Headcount
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="productivity" className="mt-4 flex flex-col gap-4">
