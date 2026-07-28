@@ -8,7 +8,8 @@ import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
+import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function TeamsPage() {
@@ -60,10 +61,7 @@ export default function TeamsPage() {
                   <p className="line-clamp-2 text-sm text-muted-foreground">{team.description}</p>
                   <div className="flex items-center justify-between border-t pt-3">
                     <div className="flex items-center gap-2">
-                      <Avatar size="sm">
-                        <AvatarImage src={team.leadAvatar} alt={team.leadName} />
-                        <AvatarFallback>{team.leadName.slice(0, 2)}</AvatarFallback>
-                      </Avatar>
+                      <EntityAvatar name={team.leadName} src={team.leadAvatar} size="sm" />
                       <div>
                         <p className="text-xs text-muted-foreground">Team lead</p>
                         <p className="text-sm font-medium">{team.leadName}</p>
@@ -71,10 +69,7 @@ export default function TeamsPage() {
                     </div>
                     <AvatarGroup>
                       {team.members.slice(0, 4).map((m) => (
-                        <Avatar key={m.id} size="sm">
-                          <AvatarImage src={m.avatarUrl} alt={m.name} />
-                          <AvatarFallback>{m.name.slice(0, 2)}</AvatarFallback>
-                        </Avatar>
+                        <EntityAvatar key={m.id} name={m.name} src={m.avatarUrl} size="sm" />
                       ))}
                       {team.members.length > 4 ? (
                         <AvatarGroupCount>+{team.members.length - 4}</AvatarGroupCount>

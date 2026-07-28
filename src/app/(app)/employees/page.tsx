@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -161,10 +161,7 @@ export default function EmployeesPage() {
                     >
                       <TableCell>
                         <div className="flex items-center gap-2.5">
-                          <Avatar size="sm">
-                            <AvatarImage src={emp.avatarUrl} alt={emp.name} />
-                            <AvatarFallback>{emp.name.slice(0, 2)}</AvatarFallback>
-                          </Avatar>
+                          <EntityAvatar name={emp.name} src={emp.avatarUrl} size="sm" />
                           <div>
                             <p className="font-medium">{emp.name}</p>
                             <p className="text-xs text-muted-foreground">{emp.email}</p>
@@ -236,10 +233,7 @@ export default function EmployeesPage() {
             <>
               <DialogHeader>
                 <div className="flex items-center gap-3">
-                  <Avatar size="lg">
-                    <AvatarImage src={selected.avatarUrl} alt={selected.name} />
-                    <AvatarFallback>{selected.name.slice(0, 2)}</AvatarFallback>
-                  </Avatar>
+                  <EntityAvatar name={selected.name} src={selected.avatarUrl} size="lg" />
                   <div>
                     <DialogTitle>{selected.name}</DialogTitle>
                     <DialogDescription>{selected.title}</DialogDescription>

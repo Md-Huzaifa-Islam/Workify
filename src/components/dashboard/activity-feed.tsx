@@ -2,8 +2,8 @@
 
 import { formatDistanceToNow } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
 import type { ActivityFeedItem } from "@/lib/mock-api/dashboard";
 
 export function ActivityFeed({ items, loading }: { items?: ActivityFeedItem[]; loading?: boolean }) {
@@ -25,12 +25,7 @@ export function ActivityFeed({ items, loading }: { items?: ActivityFeedItem[]; l
             ))
           : items?.map((item) => (
               <div key={item.id} className="flex items-start gap-3">
-                <Avatar className="size-8">
-                  <AvatarImage src={item.actorAvatar} alt={item.actorName} />
-                  <AvatarFallback className="text-xs">
-                    {item.actorName.slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+                <EntityAvatar name={item.actorName} src={item.actorAvatar} />
                 <div className="min-w-0 flex-1 space-y-0.5">
                   <p className="text-sm leading-snug">
                     <span className="font-medium">{item.actorName}</span>{" "}

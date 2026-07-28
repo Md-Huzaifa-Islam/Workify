@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import {
+  ArrowRight,
   Banknote,
   CalendarCheck,
   DollarSign,
@@ -9,13 +10,17 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
+import Link from "next/link";
 import {
   getDashboardCharts,
   getDashboardStats,
   getActivityFeed,
   getUpcomingDeadlines,
 } from "@/lib/mock-api/dashboard";
+import { getCurrentUser } from "@/lib/mock-api/auth";
+import { getCompany } from "@/lib/mock-api/companies";
 import { useWorkspaceStore } from "@/lib/store/workspace-store";
+import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { ProductivityChart } from "@/components/dashboard/charts/productivity-chart";
 import { DepartmentPerformanceChart } from "@/components/dashboard/charts/department-performance-chart";
@@ -35,8 +40,25 @@ function money(n: number) {
   }).format(n);
 }
 
+function useGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
+
 export default function DashboardPage() {
   const companyId = useWorkspaceStore((s) => s.companyId);
+  const greeting = useGreeting();
+
+  const { data: user } = useQuery({
+    queryKey: ["current-user", companyId],
+    queryFn: () => getCurrentUser(companyId),
+  });
+  const { data: company } = useQuery({
+    queryKey: ["company", companyId],
+    queryFn: () => getCompany(companyId),
+  });
 
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["dashboard-stats", companyId],
@@ -57,11 +79,27 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">
-          A snapshot of how your company is performing today.
-        </p>
+      <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-primary/10 via-card to-card px-5 py-6 sm:px-7 sm:py-8">
+        <div className="pointer-events-none absolute -right-16 -top-16 size-56 rounded-full bg-primary/10 blur-3xl" />
+        <div className="relative flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="text-sm text-muted-foreground">
+              {greeting}
+              {user ? `, ${user.name.split(" ")[0]}` : ""}
+            </p>
+            <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+              {company ? `${company.name} overview` : "Dashboard"}
+            </h1>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              Here&apos;s how things are looking across your workspace today,{" "}
+              {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}.
+            </p>
+          </div>
+          <Button className="gap-1.5" render={<Link href="/reports" />}>
+            View full report
+            <ArrowRight className="size-4" />
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

@@ -10,7 +10,8 @@ import { PriorityBadge, StatusBadge } from "@/components/shared/status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Avatar, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from "@/components/ui/avatar";
+import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
@@ -133,10 +134,7 @@ export default function ProjectsPage() {
                     <StatusBadge status={project.status} />
                     <AvatarGroup>
                       {project.members.slice(0, 3).map((m) => (
-                        <Avatar key={m.id} size="sm">
-                          <AvatarImage src={m.avatarUrl} alt={m.name} />
-                          <AvatarFallback>{m.name.slice(0, 2)}</AvatarFallback>
-                        </Avatar>
+                        <EntityAvatar key={m.id} name={m.name} src={m.avatarUrl} size="sm" />
                       ))}
                       {project.members.length > 3 ? (
                         <AvatarGroupCount>+{project.members.length - 3}</AvatarGroupCount>

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Bot, LayoutDashboard, Moon, Sun } from "lucide-react";
+import { Bot, FolderKanban, Moon, Sun, UserRound } from "lucide-react";
 import { useTheme } from "next-themes";
 import {
   Command,
@@ -84,8 +84,8 @@ export function CommandPalette() {
             <CommandSeparator />
             <CommandGroup heading="People">
               {employees.data.map((e) => (
-                <CommandItem key={e.id} onSelect={() => go(`/employees/${e.id}`)}>
-                  <LayoutDashboard />
+                <CommandItem key={e.id} onSelect={() => go("/employees")}>
+                  <UserRound />
                   <span>{e.name}</span>
                   <span className="ml-auto text-xs text-muted-foreground">{e.title}</span>
                 </CommandItem>
@@ -98,8 +98,8 @@ export function CommandPalette() {
             <CommandSeparator />
             <CommandGroup heading="Projects">
               {projects.data.map((p) => (
-                <CommandItem key={p.id} onSelect={() => go(`/projects/${p.id}`)}>
-                  <LayoutDashboard />
+                <CommandItem key={p.id} onSelect={() => go("/projects")}>
+                  <FolderKanban />
                   <span>{p.name}</span>
                 </CommandItem>
               ))}
