@@ -22,6 +22,7 @@ import {
   XAxis,
 } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function money(n: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
@@ -90,7 +91,7 @@ export default function ReportsPage() {
                 {charts ? (
                   <ProductivityChart data={charts.weeklyProductivity} />
                 ) : (
-                  <div className="h-64 animate-pulse rounded-lg bg-muted" />
+                  <Skeleton className="h-64 w-full rounded-lg" />
                 )}
               </CardContent>
             </Card>
@@ -102,7 +103,7 @@ export default function ReportsPage() {
                 {charts ? (
                   <TaskCompletionChart data={charts.taskCompletion} />
                 ) : (
-                  <div className="h-64 animate-pulse rounded-lg bg-muted" />
+                  <Skeleton className="h-64 w-full rounded-lg" />
                 )}
               </CardContent>
             </Card>
@@ -119,7 +120,7 @@ export default function ReportsPage() {
                 {charts ? (
                   <ExpensesChart data={charts.monthlyExpenses} />
                 ) : (
-                  <div className="h-56 animate-pulse rounded-lg bg-muted" />
+                  <Skeleton className="h-56 w-full rounded-lg" />
                 )}
               </CardContent>
             </Card>
@@ -131,7 +132,7 @@ export default function ReportsPage() {
                 {charts ? (
                   <PayrollTrendChart data={charts.payrollTrend} />
                 ) : (
-                  <div className="h-56 animate-pulse rounded-lg bg-muted" />
+                  <Skeleton className="h-56 w-full rounded-lg" />
                 )}
               </CardContent>
             </Card>
@@ -150,7 +151,7 @@ export default function ReportsPage() {
                     </BarChart>
                   </ChartContainer>
                 ) : (
-                  <div className="h-56 animate-pulse rounded-lg bg-muted" />
+                  <Skeleton className="h-56 w-full rounded-lg" />
                 )}
               </CardContent>
             </Card>
@@ -187,7 +188,7 @@ export default function ReportsPage() {
                 {charts ? (
                   <DepartmentPerformanceChart data={charts.departmentPerformance} />
                 ) : (
-                  <div className="h-64 animate-pulse rounded-lg bg-muted" />
+                  <Skeleton className="h-64 w-full rounded-lg" />
                 )}
               </CardContent>
             </Card>

@@ -31,6 +31,7 @@ import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { UpcomingDeadlines } from "@/components/dashboard/upcoming-deadlines";
 import { AiInsightsCard } from "@/components/dashboard/ai-insights-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function money(n: number) {
   return new Intl.NumberFormat("en-US", {
@@ -175,7 +176,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {chartsLoading || !charts ? (
-              <div className="h-64 animate-pulse rounded-lg bg-muted" />
+              <Skeleton className="h-64 w-full rounded-lg" />
             ) : (
               <ProductivityChart data={charts.weeklyProductivity} />
             )}
@@ -187,7 +188,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {chartsLoading || !charts ? (
-              <div className="h-64 animate-pulse rounded-lg bg-muted" />
+              <Skeleton className="h-64 w-full rounded-lg" />
             ) : (
               <TaskCompletionChart data={charts.taskCompletion} />
             )}
@@ -202,7 +203,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {chartsLoading || !charts ? (
-              <div className="h-64 animate-pulse rounded-lg bg-muted" />
+              <Skeleton className="h-64 w-full rounded-lg" />
             ) : (
               <DepartmentPerformanceChart data={charts.departmentPerformance} />
             )}
@@ -214,7 +215,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {chartsLoading || !charts ? (
-              <div className="h-56 animate-pulse rounded-lg bg-muted" />
+              <Skeleton className="h-56 w-full rounded-lg" />
             ) : (
               <ExpensesChart data={charts.monthlyExpenses} />
             )}
@@ -226,7 +227,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {chartsLoading || !charts ? (
-              <div className="h-56 animate-pulse rounded-lg bg-muted" />
+              <Skeleton className="h-56 w-full rounded-lg" />
             ) : (
               <PayrollTrendChart data={charts.payrollTrend} />
             )}

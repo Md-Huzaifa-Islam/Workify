@@ -89,7 +89,7 @@ export default function AttendancePage() {
         </CardHeader>
         <CardContent>
           {summaryLoading || !summary ? (
-            <div className="h-64 animate-pulse rounded-lg bg-muted" />
+            <Skeleton className="h-64 w-full rounded-lg" />
           ) : (
             <ChartContainer config={chartConfig} className="aspect-auto h-64 w-full">
               <BarChart data={summary.weeklyTrend}>
