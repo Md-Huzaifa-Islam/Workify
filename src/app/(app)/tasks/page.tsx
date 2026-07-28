@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { PriorityBadge } from "@/components/shared/status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import type { TaskStatus } from "@/types";
@@ -60,10 +60,7 @@ function TaskCard({ task }: { task: TaskRow }) {
             ) : null}
           </div>
           {task.assigneeName ? (
-            <Avatar size="sm">
-              <AvatarImage src={task.assigneeAvatar ?? undefined} alt={task.assigneeName} />
-              <AvatarFallback>{task.assigneeName.slice(0, 2)}</AvatarFallback>
-            </Avatar>
+            <EntityAvatar name={task.assigneeName} src={task.assigneeAvatar} size="sm" />
           ) : (
             <div className="flex size-6 items-center justify-center rounded-full border border-dashed text-[10px] text-muted-foreground">
               —

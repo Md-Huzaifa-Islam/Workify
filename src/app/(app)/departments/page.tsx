@@ -7,7 +7,7 @@ import { useWorkspaceStore } from "@/lib/store/workspace-store";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function money(n: number) {
@@ -78,10 +78,7 @@ export default function DepartmentsPage() {
                   <div className="flex items-center justify-between border-t pt-3">
                     {dept.headName ? (
                       <div className="flex items-center gap-2">
-                        <Avatar size="sm">
-                          <AvatarImage src={dept.headAvatar ?? undefined} alt={dept.headName} />
-                          <AvatarFallback>{dept.headName.slice(0, 2)}</AvatarFallback>
-                        </Avatar>
+                        <EntityAvatar name={dept.headName} src={dept.headAvatar} size="sm" />
                         <div>
                           <p className="text-xs text-muted-foreground">Head of department</p>
                           <p className="text-sm font-medium">{dept.headName}</p>

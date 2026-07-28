@@ -11,7 +11,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -65,10 +65,7 @@ export default function LeavePage() {
             ? Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-16 w-full" />)
             : balances?.map((b) => (
                 <div key={b.employeeId} className="flex items-center gap-3">
-                  <Avatar size="sm">
-                    <AvatarImage src={b.avatarUrl} alt={b.employeeName} />
-                    <AvatarFallback>{b.employeeName.slice(0, 2)}</AvatarFallback>
-                  </Avatar>
+                  <EntityAvatar name={b.employeeName} src={b.avatarUrl} size="sm" />
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center justify-between text-sm">
                       <span className="font-medium">{b.employeeName}</span>
@@ -114,10 +111,7 @@ export default function LeavePage() {
                       <TableRow key={req.id}>
                         <TableCell>
                           <div className="flex items-center gap-2.5">
-                            <Avatar size="sm">
-                              <AvatarImage src={req.employeeAvatar} alt={req.employeeName} />
-                              <AvatarFallback>{req.employeeName.slice(0, 2)}</AvatarFallback>
-                            </Avatar>
+                            <EntityAvatar name={req.employeeName} src={req.employeeAvatar} size="sm" />
                             <span className="font-medium">{req.employeeName}</span>
                           </div>
                         </TableCell>

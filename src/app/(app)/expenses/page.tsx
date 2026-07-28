@@ -12,7 +12,7 @@ import { StatCard } from "@/components/dashboard/stat-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Clock3, XCircle } from "lucide-react";
@@ -113,10 +113,7 @@ export default function ExpensesPage() {
                       <TableRow key={req.id}>
                         <TableCell>
                           <div className="flex items-center gap-2.5">
-                            <Avatar size="sm">
-                              <AvatarImage src={req.employeeAvatar} alt={req.employeeName} />
-                              <AvatarFallback>{req.employeeName.slice(0, 2)}</AvatarFallback>
-                            </Avatar>
+                            <EntityAvatar name={req.employeeName} src={req.employeeAvatar} size="sm" />
                             <span className="font-medium">{req.employeeName}</span>
                           </div>
                         </TableCell>

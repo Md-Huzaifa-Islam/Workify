@@ -10,7 +10,7 @@ import { StatCard } from "@/components/dashboard/stat-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function money(n: number) {
@@ -114,10 +114,7 @@ export default function PayrollPage() {
                     <TableRow key={row.id}>
                       <TableCell>
                         <div className="flex items-center gap-2.5">
-                          <Avatar size="sm">
-                            <AvatarImage src={row.employeeAvatar} alt={row.employeeName} />
-                            <AvatarFallback>{row.employeeName.slice(0, 2)}</AvatarFallback>
-                          </Avatar>
+                          <EntityAvatar name={row.employeeName} src={row.employeeAvatar} size="sm" />
                           <div>
                             <p className="font-medium">{row.employeeName}</p>
                             <p className="text-xs text-muted-foreground">{row.employeeRole}</p>

@@ -11,7 +11,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ApprovalStatus } from "@/types";
 
@@ -100,10 +100,7 @@ export default function ApprovalsPage() {
               <Card key={item.id}>
                 <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
                   <div className="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarImage src={item.avatar} alt={item.name} />
-                      <AvatarFallback>{item.name.slice(0, 2)}</AvatarFallback>
-                    </Avatar>
+                    <EntityAvatar name={item.name} src={item.avatar} />
                     <div>
                       <div className="flex items-center gap-2">
                         <p className="font-medium">{item.name}</p>

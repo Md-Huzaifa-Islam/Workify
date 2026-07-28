@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Company } from "@/types";
 
@@ -24,10 +24,7 @@ function CompanyProfileForm({ company }: { company: Company }) {
   return (
     <>
       <div className="flex items-center gap-3">
-        <Avatar size="lg">
-          <AvatarImage src={company.logoUrl} alt={company.name} />
-          <AvatarFallback>{company.name.slice(0, 2)}</AvatarFallback>
-        </Avatar>
+        <EntityAvatar name={company.name} src={company.logoUrl} size="lg" />
         <Button variant="outline" size="sm">
           Change logo
         </Button>

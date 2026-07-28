@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
@@ -108,10 +108,7 @@ export default function FilesPage() {
                     </div>
                     <div className="flex items-center justify-between border-t pt-2.5">
                       <div className="flex items-center gap-1.5">
-                        <Avatar size="sm">
-                          <AvatarImage src={file.ownerAvatar} alt={file.ownerName} />
-                          <AvatarFallback>{file.ownerName.slice(0, 2)}</AvatarFallback>
-                        </Avatar>
+                        <EntityAvatar name={file.ownerName} src={file.ownerAvatar} size="sm" />
                         <span className="text-xs text-muted-foreground">{file.ownerName.split(" ")[0]}</span>
                       </div>
                       <span className="text-xs text-muted-foreground">
