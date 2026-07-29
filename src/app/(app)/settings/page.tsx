@@ -15,11 +15,31 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import type { Company } from "@/types";
 
 function CompanyProfileForm({ company }: { company: Company }) {
   const [name, setName] = useState(company.name);
   const [industry, setIndustry] = useState(company.industry);
+  const [saving, setSaving] = useState(false);
+
+  function save() {
+    setSaving(true);
+    setTimeout(() => {
+      setSaving(false);
+      toast.success("Company profile updated");
+    }, 500);
+  }
 
   return (
     <>
@@ -39,6 +59,9 @@ function CompanyProfileForm({ company }: { company: Company }) {
           <Input id="company-industry" value={industry} onChange={(e) => setIndustry(e.target.value)} />
         </div>
       </div>
+      <Button size="sm" disabled={saving} onClick={save}>
+        {saving ? "Saving..." : "Save changes"}
+      </Button>
     </>
   );
 }
@@ -80,9 +103,6 @@ export default function SettingsPage() {
               ) : (
                 <CompanyProfileForm key={company.id} company={company} />
               )}
-              <Button size="sm" onClick={() => toast.success("Company profile updated")}>
-                Save changes
-              </Button>
             </CardContent>
           </Card>
         </TabsContent>
@@ -132,9 +152,24 @@ export default function SettingsPage() {
                   <p className="text-sm font-medium">Transfer ownership</p>
                   <p className="text-xs text-muted-foreground">Move workspace ownership to another admin.</p>
                 </div>
-                <Button variant="outline" size="sm">
-                  Transfer
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger render={<Button variant="outline" size="sm" />}>Transfer</AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Transfer ownership?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        You&apos;ll lose owner-level access to billing and workspace deletion. The new owner will be
+                        notified immediately.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => toast.success("Ownership transfer request sent")}>
+                        Transfer ownership
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
               <div className="flex items-center justify-between rounded-lg border border-destructive/30 p-3">
                 <div>
@@ -143,9 +178,27 @@ export default function SettingsPage() {
                     Permanently delete this company and all of its data.
                   </p>
                 </div>
-                <Button variant="destructive" size="sm">
-                  Delete
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger render={<Button variant="destructive" size="sm" />}>Delete</AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete this workspace?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This permanently deletes all employees, projects, payroll history, and files for this
+                        company. This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-destructive text-white hover:bg-destructive/90"
+                        onClick={() => toast.error("This is a UI prototype — workspace deletion is not wired up yet.")}
+                      >
+                        Delete workspace
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </CardContent>
           </Card>
