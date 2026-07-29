@@ -3,8 +3,20 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, Mail, MapPin, Phone, Plus, Search, UsersRound } from "lucide-react";
-import { createEmployee, listEmployees } from "@/lib/mock-api/employees";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Mail,
+  MapPin,
+  MoreHorizontal,
+  Phone,
+  Plus,
+  Search,
+  UserCheck,
+  UserX,
+  UsersRound,
+} from "lucide-react";
+import { createEmployee, listEmployees, updateEmployeeStatus } from "@/lib/mock-api/employees";
 import { listDepartments } from "@/lib/mock-api/departments";
 import { useWorkspaceStore } from "@/lib/store/workspace-store";
 import { PageHeader } from "@/components/shared/page-header";
@@ -32,6 +44,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import type { Employee } from "@/types";
 
 const PAGE_SIZE = 10;
@@ -73,6 +101,20 @@ export default function EmployeesPage() {
   });
 
   const canInvite = invite.name.trim() && invite.email.trim() && invite.departmentId;
+
+  const [deactivateTarget, setDeactivateTarget] = useState<Employee | null>(null);
+
+  const statusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: Employee["status"] }) =>
+      updateEmployeeStatus(id, status),
+    onSuccess: (employee) => {
+      queryClient.invalidateQueries({ queryKey: ["employees", companyId] });
+      toast.success(
+        employee.status === "active" ? `${employee.name} reactivated` : `${employee.name} deactivated`,
+      );
+      setDeactivateTarget(null);
+    },
+  });
 
   const { data, isLoading, isPlaceholderData } = useQuery({
     queryKey: ["employees", companyId, search, departmentId, status, page],
@@ -170,13 +212,14 @@ export default function EmployeesPage() {
                 <TableHead>Location</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Joined</TableHead>
+                <TableHead className="w-10" />
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading
                 ? Array.from({ length: 6 }).map((_, i) => (
                     <TableRow key={i}>
-                      <TableCell colSpan={6}>
+                      <TableCell colSpan={7}>
                         <Skeleton className="h-8 w-full" />
                       </TableCell>
                     </TableRow>
@@ -210,11 +253,37 @@ export default function EmployeesPage() {
                           year: "numeric",
                         })}
                       </TableCell>
+                      <TableCell onClick={(e) => e.stopPropagation()}>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" />}>
+                            <MoreHorizontal className="size-4" />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => setSelected(emp)}>View profile</DropdownMenuItem>
+                            {emp.status === "active" ? (
+                              <DropdownMenuItem
+                                variant="destructive"
+                                onClick={() => setDeactivateTarget(emp)}
+                              >
+                                <UserX />
+                                Deactivate
+                              </DropdownMenuItem>
+                            ) : (
+                              <DropdownMenuItem
+                                onClick={() => statusMutation.mutate({ id: emp.id, status: "active" })}
+                              >
+                                <UserCheck />
+                                Reactivate
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
                     </TableRow>
                   ))}
               {!isLoading && data?.data.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
+                  <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">
                     <UsersRound className="mx-auto mb-2 size-6" />
                     No employees match your filters.
                   </TableCell>
@@ -409,6 +478,28 @@ export default function EmployeesPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={!!deactivateTarget} onOpenChange={(open) => !open && setDeactivateTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Deactivate {deactivateTarget?.name}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              They&apos;ll lose access to the workspace immediately. You can reactivate them at any time.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-white hover:bg-destructive/90"
+              onClick={() =>
+                deactivateTarget && statusMutation.mutate({ id: deactivateTarget.id, status: "inactive" })
+              }
+            >
+              Deactivate
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
