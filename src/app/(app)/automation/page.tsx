@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface AutomationRule {
   id: string;
@@ -96,10 +97,15 @@ export default function AutomationPage() {
 
       <div className="flex flex-col gap-3">
         {rules.map((rule) => (
-          <Card key={rule.id}>
+          <Card key={rule.id} className={cn("transition-opacity", !rule.enabled && "opacity-60")}>
             <CardContent className="flex flex-wrap items-center justify-between gap-4 p-4">
               <div className="flex items-start gap-3">
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <div
+                  className={cn(
+                    "flex size-9 shrink-0 items-center justify-center rounded-lg",
+                    rule.enabled ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
+                  )}
+                >
                   <Workflow className="size-4.5" />
                 </div>
                 <div>

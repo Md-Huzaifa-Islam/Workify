@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 function money(n: number) {
@@ -111,22 +112,28 @@ export default function BillingPage() {
           <CardTitle className="text-base">Compare plans</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {PLAN_TIERS.map((tier) => (
-            <div
-              key={tier.id}
-              className={cn(
-                "rounded-lg border p-4",
-                plan?.name.toLowerCase() === tier.label.toLowerCase() && "border-primary ring-1 ring-primary",
-              )}
-            >
-              <p className="font-medium">{tier.label}</p>
-              <p className="mt-1 text-2xl font-semibold">
-                {money(tier.price)}
-                <span className="text-sm font-normal text-muted-foreground">/mo</span>
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">Up to {tier.seats} seats</p>
-            </div>
-          ))}
+          {PLAN_TIERS.map((tier) => {
+            const isCurrent = plan?.name.toLowerCase() === tier.label.toLowerCase();
+            return (
+              <div
+                key={tier.id}
+                className={cn(
+                  "relative rounded-lg border p-4",
+                  isCurrent && "border-primary ring-1 ring-primary",
+                )}
+              >
+                {isCurrent ? (
+                  <Badge className="absolute -top-2.5 right-3 font-normal">Current plan</Badge>
+                ) : null}
+                <p className="font-medium">{tier.label}</p>
+                <p className="mt-1 text-2xl font-semibold">
+                  {money(tier.price)}
+                  <span className="text-sm font-normal text-muted-foreground">/mo</span>
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">Up to {tier.seats} seats</p>
+              </div>
+            );
+          })}
         </CardContent>
       </Card>
 
