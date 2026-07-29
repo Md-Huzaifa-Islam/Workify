@@ -89,3 +89,77 @@ export async function listTaskBoard(companyId: string): Promise<TaskRow[]> {
     };
   });
 }
+
+export interface CreateProjectInput {
+  name: string;
+  description: string;
+  departmentId: string;
+  priority: Project["priority"];
+  dueDate: string;
+  budget: number;
+}
+
+const PROJECT_COLOR_POOL = ["#6366f1", "#0ea5e9", "#d946ef", "#f59e0b", "#10b981", "#ef4444"];
+
+export async function createProject(
+  companyId: string,
+  ownerId: string,
+  input: CreateProjectInput,
+): Promise<Project> {
+  await delay(400);
+  const project: Project = {
+    id: `project_${companyId}_${crypto.randomUUID()}`,
+    companyId,
+    departmentId: input.departmentId,
+    name: input.name,
+    description: input.description,
+    status: "planning",
+    progress: 0,
+    priority: input.priority,
+    ownerId,
+    memberIds: [ownerId],
+    startDate: new Date().toISOString(),
+    dueDate: input.dueDate,
+    budget: input.budget,
+    spent: 0,
+    color: PROJECT_COLOR_POOL[PROJECTS.length % PROJECT_COLOR_POOL.length],
+  };
+  PROJECTS.push(project);
+  return project;
+}
+
+export interface CreateTaskInput {
+  title: string;
+  projectId: string;
+  assigneeId: string | null;
+  priority: Task["priority"];
+  dueDate: string | null;
+}
+
+export async function createTask(
+  companyId: string,
+  reporterId: string,
+  input: CreateTaskInput,
+): Promise<Task> {
+  await delay(350);
+  const task: Task = {
+    id: `task_${input.projectId}_${crypto.randomUUID()}`,
+    projectId: input.projectId,
+    companyId,
+    title: input.title,
+    description: "",
+    status: "todo",
+    priority: input.priority,
+    assigneeId: input.assigneeId,
+    reporterId,
+    labels: [],
+    dueDate: input.dueDate,
+    createdAt: new Date().toISOString(),
+    commentCount: 0,
+    attachmentCount: 0,
+    subtaskTotal: 0,
+    subtaskDone: 0,
+  };
+  TASKS.push(task);
+  return task;
+}

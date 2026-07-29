@@ -48,3 +48,31 @@ export async function getExpenseSummary(companyId: string): Promise<ExpenseSumma
     byCategory: Array.from(byCategoryMap.entries()).map(([category, amount]) => ({ category, amount })),
   };
 }
+
+export interface CreateExpenseInput {
+  category: string;
+  description: string;
+  amount: number;
+}
+
+export async function createExpenseRequest(
+  companyId: string,
+  employeeId: string,
+  input: CreateExpenseInput,
+): Promise<ExpenseRequest> {
+  await delay(400);
+  const expense: ExpenseRequest = {
+    id: `expense_${employeeId}_${crypto.randomUUID()}`,
+    companyId,
+    employeeId,
+    category: input.category,
+    description: input.description,
+    amount: input.amount,
+    currency: "USD",
+    status: "pending",
+    submittedAt: new Date().toISOString(),
+    receiptUrl: null,
+  };
+  EXPENSE_REQUESTS.push(expense);
+  return expense;
+}

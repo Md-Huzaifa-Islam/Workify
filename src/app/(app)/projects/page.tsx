@@ -1,13 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { CalendarDays, ListChecks, Plus, Search } from "lucide-react";
-import { listProjects } from "@/lib/mock-api/projects";
+import { createProject, listProjects } from "@/lib/mock-api/projects";
+import { listDepartments } from "@/lib/mock-api/departments";
+import { getCurrentUser } from "@/lib/mock-api/auth";
 import { useWorkspaceStore } from "@/lib/store/workspace-store";
 import { PageHeader } from "@/components/shared/page-header";
 import { PriorityBadge, StatusBadge } from "@/components/shared/status-badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
@@ -21,6 +27,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import type { Priority } from "@/types";
 
 function money(n: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
@@ -28,10 +43,22 @@ function money(n: number) {
 
 const STATUS_OPTIONS = ["all", "planning", "active", "on_hold", "completed", "cancelled"];
 
+const EMPTY_PROJECT = {
+  name: "",
+  description: "",
+  departmentId: "",
+  priority: "medium" as Priority,
+  dueDate: "",
+  budget: "",
+};
+
 export default function ProjectsPage() {
   const companyId = useWorkspaceStore((s) => s.companyId);
+  const queryClient = useQueryClient();
   const [status, setStatus] = useState("all");
   const [search, setSearch] = useState("");
+  const [createOpen, setCreateOpen] = useState(false);
+  const [form, setForm] = useState(EMPTY_PROJECT);
 
   const { data, isLoading } = useQuery({
     queryKey: ["projects", companyId, status, search],
@@ -43,13 +70,40 @@ export default function ProjectsPage() {
       }),
   });
 
+  const { data: departments } = useQuery({
+    queryKey: ["departments", companyId],
+    queryFn: () => listDepartments(companyId),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      const user = await getCurrentUser(companyId);
+      return createProject(companyId, user.id, {
+        name: form.name,
+        description: form.description,
+        departmentId: form.departmentId,
+        priority: form.priority,
+        dueDate: new Date(form.dueDate).toISOString(),
+        budget: Number(form.budget) || 0,
+      });
+    },
+    onSuccess: (project) => {
+      queryClient.invalidateQueries({ queryKey: ["projects", companyId] });
+      toast.success(`${project.name} created`);
+      setCreateOpen(false);
+      setForm(EMPTY_PROJECT);
+    },
+  });
+
+  const canCreate = form.name.trim() && form.departmentId && form.dueDate;
+
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
       <PageHeader
         title="Projects"
         description="Timelines, budgets, and progress across every initiative."
         actions={
-          <Button size="sm" className="gap-1.5">
+          <Button size="sm" className="gap-1.5" onClick={() => setCreateOpen(true)}>
             <Plus className="size-4" />
             New project
           </Button>
@@ -152,6 +206,98 @@ export default function ProjectsPage() {
               </Card>
             ))}
       </div>
+
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>New project</DialogTitle>
+            <DialogDescription>Set the basics — you can add members and tasks after.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="project-name">Project name</Label>
+              <Input
+                id="project-name"
+                placeholder="Atlas Rollout"
+                value={form.name}
+                onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="project-description">Description</Label>
+              <Textarea
+                id="project-description"
+                placeholder="What is this project about?"
+                value={form.description}
+                onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label>Department</Label>
+                <Select
+                  value={form.departmentId}
+                  onValueChange={(v) => setForm((prev) => ({ ...prev, departmentId: String(v) }))}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {departments?.map((d) => (
+                      <SelectItem key={d.id} value={d.id}>
+                        {d.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Priority</Label>
+                <Select
+                  value={form.priority}
+                  onValueChange={(v) => setForm((prev) => ({ ...prev, priority: v as Priority }))}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="project-due">Due date</Label>
+                <Input
+                  id="project-due"
+                  type="date"
+                  value={form.dueDate}
+                  onChange={(e) => setForm((prev) => ({ ...prev, dueDate: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="project-budget">Budget (USD)</Label>
+                <Input
+                  id="project-budget"
+                  type="number"
+                  placeholder="50000"
+                  value={form.budget}
+                  onChange={(e) => setForm((prev) => ({ ...prev, budget: e.target.value }))}
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter showCloseButton>
+            <Button disabled={!canCreate || createMutation.isPending} onClick={() => createMutation.mutate()}>
+              {createMutation.isPending ? "Creating..." : "Create project"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

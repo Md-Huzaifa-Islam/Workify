@@ -52,3 +52,35 @@ export async function getLeaveBalances(companyId: string): Promise<LeaveBalance[
     return { employeeId: e.id, employeeName: e.name, avatarUrl: e.avatarUrl, allocated: 24, used };
   });
 }
+
+export interface CreateLeaveInput {
+  type: LeaveRequest["type"];
+  startDate: string;
+  endDate: string;
+  reason: string;
+}
+
+export async function createLeaveRequest(
+  companyId: string,
+  employeeId: string,
+  input: CreateLeaveInput,
+): Promise<LeaveRequest> {
+  await delay(400);
+  const start = new Date(input.startDate);
+  const end = new Date(input.endDate);
+  const days = Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1);
+  const leave: LeaveRequest = {
+    id: `leave_${employeeId}_${crypto.randomUUID()}`,
+    companyId,
+    employeeId,
+    type: input.type,
+    startDate: start.toISOString(),
+    endDate: end.toISOString(),
+    days,
+    reason: input.reason,
+    status: "pending",
+    requestedAt: new Date().toISOString(),
+  };
+  LEAVE_REQUESTS.push(leave);
+  return leave;
+}
