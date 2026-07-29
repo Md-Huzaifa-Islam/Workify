@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { File, FileImage, FileSpreadsheet, FileText, Search, Upload } from "lucide-react";
-import { listFiles } from "@/lib/mock-api/files";
+import { useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { File, FileImage, FileSpreadsheet, FileText, Search, Trash2, Upload } from "lucide-react";
+import { createFile, deleteFile, listFiles } from "@/lib/mock-api/files";
+import { getCurrentUser } from "@/lib/mock-api/auth";
 import { useWorkspaceStore } from "@/lib/store/workspace-store";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
@@ -19,6 +21,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const TYPE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
   pdf: FileText,
@@ -43,23 +56,63 @@ function formatSize(bytes: number) {
 
 export default function FilesPage() {
   const companyId = useWorkspaceStore((s) => s.companyId);
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [type, setType] = useState("all");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["files", companyId, search, type],
     queryFn: () => listFiles(companyId, { search, filters: { type: type === "all" ? undefined : type } }),
   });
 
+  function invalidateFiles() {
+    queryClient.invalidateQueries({ queryKey: ["files", companyId] });
+  }
+
+  const uploadMutation = useMutation({
+    mutationFn: async (file: globalThis.File) => {
+      const user = await getCurrentUser(companyId);
+      return createFile(companyId, user.id, { name: file.name, size: file.size });
+    },
+    onSuccess: (file) => {
+      invalidateFiles();
+      toast.success(`${file.name} uploaded`);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteFile(id),
+    onSuccess: () => {
+      invalidateFiles();
+      toast.success("File deleted");
+    },
+  });
+
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
+      <input
+        ref={fileInputRef}
+        type="file"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) uploadMutation.mutate(file);
+          e.target.value = "";
+        }}
+      />
       <PageHeader
         title="Files"
         description="Documents, spreadsheets, and assets shared across your company."
         actions={
-          <Button size="sm" className="gap-1.5">
+          <Button
+            size="sm"
+            className="gap-1.5"
+            disabled={uploadMutation.isPending}
+            onClick={() => fileInputRef.current?.click()}
+          >
             <Upload className="size-4" />
-            Upload
+            {uploadMutation.isPending ? "Uploading..." : "Upload"}
           </Button>
         }
       />
@@ -103,6 +156,30 @@ export default function FilesPage() {
                         <div className={`flex size-9 items-center justify-center rounded-lg ${TYPE_COLOR[file.type]}`}>
                           <Icon className="size-4.5" />
                         </div>
+                        <AlertDialog>
+                          <AlertDialogTrigger
+                            render={<Button variant="ghost" size="icon-sm" className="text-muted-foreground" />}
+                          >
+                            <Trash2 className="size-3.5" />
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete {file.name}?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This will permanently remove the file from your workspace.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                className="bg-destructive text-white hover:bg-destructive/90"
+                                onClick={() => deleteMutation.mutate(file.id)}
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                       <div>
                         <p className="truncate text-sm font-medium">{file.name}</p>

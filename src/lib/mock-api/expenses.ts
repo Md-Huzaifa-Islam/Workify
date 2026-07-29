@@ -1,6 +1,6 @@
 import { EMPLOYEES, EXPENSE_REQUESTS } from "@/lib/mock/seed";
 import { delay, paginate, searchItems, sortItems } from "@/lib/mock-api/client";
-import type { ExpenseRequest, PaginatedResult, QueryParams } from "@/types";
+import type { ApprovalStatus, ExpenseRequest, PaginatedResult, QueryParams } from "@/types";
 
 export interface ExpenseRow extends ExpenseRequest {
   employeeName: string;
@@ -74,5 +74,13 @@ export async function createExpenseRequest(
     receiptUrl: null,
   };
   EXPENSE_REQUESTS.push(expense);
+  return expense;
+}
+
+export async function updateExpenseStatus(id: string, status: ApprovalStatus): Promise<ExpenseRequest> {
+  await delay(300);
+  const expense = EXPENSE_REQUESTS.find((e) => e.id === id);
+  if (!expense) throw new Error("Expense not found");
+  expense.status = status;
   return expense;
 }

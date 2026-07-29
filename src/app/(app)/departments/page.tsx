@@ -1,25 +1,56 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { Building2, FolderKanban, Plus, UsersRound } from "lucide-react";
-import { listDepartments } from "@/lib/mock-api/departments";
+import { createDepartment, listDepartments } from "@/lib/mock-api/departments";
 import { useWorkspaceStore } from "@/lib/store/workspace-store";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { EntityAvatar } from "@/components/shared/entity-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 function money(n: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
 }
 
+const EMPTY_DEPARTMENT = { name: "", budget: "" };
+
 export default function DepartmentsPage() {
   const companyId = useWorkspaceStore((s) => s.companyId);
+  const queryClient = useQueryClient();
+  const [createOpen, setCreateOpen] = useState(false);
+  const [form, setForm] = useState(EMPTY_DEPARTMENT);
+
   const { data, isLoading } = useQuery({
     queryKey: ["departments-detail", companyId],
     queryFn: () => listDepartments(companyId),
   });
+
+  const createMutation = useMutation({
+    mutationFn: () => createDepartment(companyId, { name: form.name, budget: Number(form.budget) || 0 }),
+    onSuccess: (department) => {
+      queryClient.invalidateQueries({ queryKey: ["departments-detail", companyId] });
+      queryClient.invalidateQueries({ queryKey: ["departments", companyId] });
+      toast.success(`${department.name} department created`);
+      setCreateOpen(false);
+      setForm(EMPTY_DEPARTMENT);
+    },
+  });
+
+  const canCreate = form.name.trim();
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
@@ -27,7 +58,7 @@ export default function DepartmentsPage() {
         title="Departments"
         description="Structure, budgets, and leadership across your organization."
         actions={
-          <Button size="sm" className="gap-1.5">
+          <Button size="sm" className="gap-1.5" onClick={() => setCreateOpen(true)}>
             <Plus className="size-4" />
             New department
           </Button>
@@ -96,6 +127,41 @@ export default function DepartmentsPage() {
               </Card>
             ))}
       </div>
+
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>New department</DialogTitle>
+            <DialogDescription>You can assign a head and budget details later.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="dept-name">Department name</Label>
+              <Input
+                id="dept-name"
+                placeholder="Customer Success"
+                value={form.name}
+                onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="dept-budget">Annual budget (USD)</Label>
+              <Input
+                id="dept-budget"
+                type="number"
+                placeholder="250000"
+                value={form.budget}
+                onChange={(e) => setForm((prev) => ({ ...prev, budget: e.target.value }))}
+              />
+            </div>
+          </div>
+          <DialogFooter showCloseButton>
+            <Button disabled={!canCreate || createMutation.isPending} onClick={() => createMutation.mutate()}>
+              {createMutation.isPending ? "Creating..." : "Create department"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

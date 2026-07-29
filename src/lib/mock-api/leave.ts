@@ -1,6 +1,6 @@
 import { EMPLOYEES, LEAVE_REQUESTS } from "@/lib/mock/seed";
 import { delay, paginate, sortItems } from "@/lib/mock-api/client";
-import type { LeaveRequest, PaginatedResult, QueryParams } from "@/types";
+import type { ApprovalStatus, LeaveRequest, PaginatedResult, QueryParams } from "@/types";
 
 export interface LeaveRequestWithEmployee extends LeaveRequest {
   employeeName: string;
@@ -82,5 +82,13 @@ export async function createLeaveRequest(
     requestedAt: new Date().toISOString(),
   };
   LEAVE_REQUESTS.push(leave);
+  return leave;
+}
+
+export async function updateLeaveStatus(id: string, status: ApprovalStatus): Promise<LeaveRequest> {
+  await delay(300);
+  const leave = LEAVE_REQUESTS.find((l) => l.id === id);
+  if (!leave) throw new Error("Leave request not found");
+  leave.status = status;
   return leave;
 }

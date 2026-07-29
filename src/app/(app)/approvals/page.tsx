@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Banknote, Check, ClipboardList, ReceiptText, X } from "lucide-react";
-import { listLeaveRequests } from "@/lib/mock-api/leave";
-import { listExpenseRequests } from "@/lib/mock-api/expenses";
+import { listLeaveRequests, updateLeaveStatus } from "@/lib/mock-api/leave";
+import { listExpenseRequests, updateExpenseStatus } from "@/lib/mock-api/expenses";
 import { useWorkspaceStore } from "@/lib/store/workspace-store";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,7 +33,7 @@ interface ApprovalItem {
 
 export default function ApprovalsPage() {
   const companyId = useWorkspaceStore((s) => s.companyId);
-  const [overrides, setOverrides] = useState<Record<string, ApprovalStatus>>({});
+  const queryClient = useQueryClient();
 
   const { data: leave, isLoading: leaveLoading } = useQuery({
     queryKey: ["leave-requests", companyId],
@@ -72,15 +72,33 @@ export default function ApprovalsPage() {
     );
   }, [leave, expenses]);
 
-  const pending = items.filter((i) => (overrides[i.id] ?? i.status) === "pending");
+  const pending = items.filter((i) => i.status === "pending");
   const isLoading = leaveLoading || expensesLoading;
 
-  function decide(id: string, status: ApprovalStatus, name: string) {
-    setOverrides((prev) => ({ ...prev, [id]: status }));
-    toast[status === "approved" ? "success" : "error"](
-      `${status === "approved" ? "Approved" : "Rejected"} request from ${name}`,
-    );
-  }
+  const decideMutation = useMutation({
+    mutationFn: async ({
+      id,
+      status,
+      kind,
+    }: {
+      id: string;
+      status: ApprovalStatus;
+      name: string;
+      kind: "leave" | "expense";
+    }) => {
+      if (kind === "leave") await updateLeaveStatus(id, status);
+      else await updateExpenseStatus(id, status);
+    },
+    onSuccess: (_result, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["leave-requests", companyId] });
+      queryClient.invalidateQueries({ queryKey: ["expense-requests", companyId] });
+      queryClient.invalidateQueries({ queryKey: ["leave-balances", companyId] });
+      queryClient.invalidateQueries({ queryKey: ["expense-summary", companyId] });
+      toast[variables.status === "approved" ? "success" : "error"](
+        `${variables.status === "approved" ? "Approved" : "Rejected"} request from ${variables.name}`,
+      );
+    },
+  });
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
@@ -123,7 +141,10 @@ export default function ApprovalsPage() {
                       size="sm"
                       variant="outline"
                       className="gap-1.5"
-                      onClick={() => decide(item.id, "approved", item.name)}
+                      disabled={decideMutation.isPending}
+                      onClick={() =>
+                        decideMutation.mutate({ id: item.id, status: "approved", name: item.name, kind: item.kind })
+                      }
                     >
                       <Check className="size-3.5 text-success" />
                       Approve
@@ -132,7 +153,10 @@ export default function ApprovalsPage() {
                       size="sm"
                       variant="outline"
                       className="gap-1.5"
-                      onClick={() => decide(item.id, "rejected", item.name)}
+                      disabled={decideMutation.isPending}
+                      onClick={() =>
+                        decideMutation.mutate({ id: item.id, status: "rejected", name: item.name, kind: item.kind })
+                      }
                     >
                       <X className="size-3.5 text-destructive" />
                       Reject
