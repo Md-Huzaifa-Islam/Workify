@@ -1,11 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ArrowUp, Bot, Sparkles, User } from "lucide-react";
+import { ArrowUp, Bot, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { EntityAvatar } from "@/components/shared/entity-avatar";
+import { getCurrentUser } from "@/lib/mock-api/auth";
+import { useWorkspaceStore } from "@/lib/store/workspace-store";
 import { cn } from "@/lib/utils";
 
 interface Message {
@@ -44,6 +48,11 @@ function reply(prompt: string) {
 }
 
 export default function AiAssistantPage() {
+  const companyId = useWorkspaceStore((s) => s.companyId);
+  const { data: user } = useQuery({
+    queryKey: ["current-user", companyId],
+    queryFn: () => getCurrentUser(companyId),
+  });
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
@@ -93,14 +102,13 @@ export default function AiAssistantPage() {
               transition={{ duration: 0.25 }}
               className={cn("flex gap-3", m.role === "user" && "flex-row-reverse")}
             >
-              <div
-                className={cn(
-                  "flex size-7 shrink-0 items-center justify-center rounded-full",
-                  m.role === "assistant" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
-                )}
-              >
-                {m.role === "assistant" ? <Bot className="size-3.5" /> : <User className="size-3.5" />}
-              </div>
+              {m.role === "assistant" ? (
+                <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Bot className="size-3.5" />
+                </div>
+              ) : (
+                <EntityAvatar name={user?.name ?? "You"} src={user?.avatarUrl} size="sm" />
+              )}
               <div
                 className={cn(
                   "max-w-[80%] whitespace-pre-line rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
@@ -112,11 +120,19 @@ export default function AiAssistantPage() {
             </motion.div>
           ))}
           {typing ? (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <div className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <div className="flex items-center gap-3">
+              <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <Bot className="size-3.5" />
               </div>
-              Thinking...
+              <div className="flex items-center gap-1 rounded-2xl bg-muted px-3.5 py-2.5">
+                {[0, 1, 2].map((i) => (
+                  <span
+                    key={i}
+                    className="size-1.5 animate-bounce rounded-full bg-muted-foreground/60"
+                    style={{ animationDelay: `${i * 0.12}s` }}
+                  />
+                ))}
+              </div>
             </div>
           ) : null}
         </div>
