@@ -1,15 +1,13 @@
-import { COMPANIES } from "@/lib/mock/seed";
-import { delay } from "@/lib/mock-api/client";
+import { apiGet } from "@/lib/mock-api/http";
 import type { Company } from "@/types";
 
 export async function getCompanies(): Promise<Company[]> {
-  await delay(200);
-  return COMPANIES;
+  return apiGet<Company[]>("/api/companies");
 }
 
 export async function getCompany(id: string): Promise<Company | null> {
-  await delay(150);
-  return COMPANIES.find((c) => c.id === id) ?? null;
+  return apiGet<Company | null>(`/api/companies/${id}`);
 }
 
-export const DEFAULT_COMPANY_ID = COMPANIES[0].id;
+/** Matches the first seeded company's deterministic id (seed.ts assigns company_1..company_5). */
+export const DEFAULT_COMPANY_ID = "company_1";

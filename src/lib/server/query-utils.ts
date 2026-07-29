@@ -1,23 +1,8 @@
 import type { PaginatedResult, QueryParams } from "@/types";
 
-export function delay(ms = 350): Promise<void> {
+/** Simulates real network/DB latency so loading states stay visible. */
+export function delay(ms = 200): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export class MockApiError extends Error {
-  status: number;
-  constructor(message: string, status = 500) {
-    super(message);
-    this.status = status;
-    this.name = "MockApiError";
-  }
-}
-
-/** ~2% of calls reject, so pages can exercise real error states. */
-export function maybeFail(rate = 0.02) {
-  if (Math.random() < rate) {
-    throw new MockApiError("Something went wrong while fetching data.");
-  }
 }
 
 export function paginate<T>(items: T[], params: QueryParams = {}): PaginatedResult<T> {
@@ -47,4 +32,15 @@ export function searchItems<T>(items: T[], search: string | undefined, fields: (
   return items.filter((item) =>
     fields.some((field) => String(item[field] ?? "").toLowerCase().includes(q)),
   );
+}
+
+/** Parses the QueryParams a client sent as URLSearchParams (?params=<json>). */
+export function parseQueryParams(searchParams: URLSearchParams): QueryParams {
+  const raw = searchParams.get("params");
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw) as QueryParams;
+  } catch {
+    return {};
+  }
 }
