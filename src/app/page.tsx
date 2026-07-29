@@ -86,7 +86,7 @@ export default function LandingPage() {
 
       <main className="flex-1">
         <section className="relative overflow-hidden px-4 pt-20 pb-24 md:px-6 md:pt-28">
-          <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[320px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/6 via-transparent to-transparent" />
           <motion.div
             initial="hidden"
             animate="show"

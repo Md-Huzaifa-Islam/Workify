@@ -80,27 +80,24 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">
-      <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-primary/10 via-card to-card px-5 py-6 sm:px-7 sm:py-8">
-        <div className="pointer-events-none absolute -right-16 -top-16 size-56 rounded-full bg-primary/10 blur-3xl" />
-        <div className="relative flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="text-sm text-muted-foreground">
-              {greeting}
-              {user ? `, ${user.name.split(" ")[0]}` : ""}
-            </p>
-            <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-              {company ? `${company.name} overview` : "Dashboard"}
-            </h1>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              Here&apos;s how things are looking across your workspace today,{" "}
-              {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}.
-            </p>
-          </div>
-          <Button className="gap-1.5" render={<Link href="/reports" />}>
-            View full report
-            <ArrowRight className="size-4" />
-          </Button>
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-l-4 border-l-primary bg-card px-5 py-4 sm:px-6">
+        <div>
+          <p className="text-sm text-muted-foreground">
+            {greeting}
+            {user ? `, ${user.name.split(" ")[0]}` : ""}
+          </p>
+          <h1 className="mt-0.5 text-2xl font-semibold tracking-tight">
+            {company ? `${company.name} overview` : "Dashboard"}
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Here&apos;s how things are looking across your workspace today,{" "}
+            {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}.
+          </p>
         </div>
+        <Button className="gap-1.5" render={<Link href="/reports" />}>
+          View full report
+          <ArrowRight className="size-4" />
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
